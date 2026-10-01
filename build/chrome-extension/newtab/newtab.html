@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nueva pestaña | Attlon</title>
+  <link rel="icon" type="image/png" href="../assets/icons/icon32.png">
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body class="theme-microsoft-attlon theme-dark">
+
+  <!-- Capa de Fondo: Soporta Vídeo Oficial, Imagen Estática, Gradiente o Imagen Personalizada -->
+  <div class="video-container" id="videoContainer">
+    <div class="custom-bg-layer" id="customBgLayer"></div>
+    <video id="bgVideo" autoplay loop muted playsinline preload="auto">
+      <source src="../assets/video/building.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay" id="videoOverlay"></div>
+  </div>
+
+  <!-- Barra Superior Estilo Microsoft Edge con Bordes Transparentes Azulados -->
+  <header class="top-nav">
+    <div class="top-left">
+      <!-- 9-Dots Waffle (Lanzador de aplicaciones tipo Microsoft 365) -->
+      <button class="waffle-btn" id="waffleBtn" title="Iniciador de aplicaciones Attlon & Microsoft 365" aria-label="Aplicaciones">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="5" cy="5" r="2.2"></circle>
+          <circle cx="12" cy="5" r="2.2"></circle>
+          <circle cx="19" cy="5" r="2.2"></circle>
+          <circle cx="5" cy="12" r="2.2"></circle>
+          <circle cx="12" cy="12" r="2.2"></circle>
+          <circle cx="19" cy="12" r="2.2"></circle>
+          <circle cx="5" cy="19" r="2.2"></circle>
+          <circle cx="12" cy="19" r="2.2"></circle>
+          <circle cx="19" cy="19" r="2.2"></circle>
+        </svg>
+      </button>
+
+      <!-- Badge Corporativo "cottès by Attlon" -->
+      <a href="https://attlon.com/" target="_blank" class="brand-pill-badge" title="Attlon Industrial Safety · Cottés">
+        <div class="pill-cottes">
+          <span class="cottes-text">cottès</span>
+          <span class="by-attlon">by Attlon</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="top-right">
+      <!-- Widget del Tiempo en Barra Superior (INTERACTIVO Y EN VIVO) -->
+      <div class="weather-widget" id="topWeatherWidget" title="Haz clic para ver o cambiar la ubicación meteorológica">
+        <span class="weather-city" id="topWeatherCity">Paterna</span>
+        <span class="weather-icon-slot" id="topWeatherIcon">
+          <svg class="weather-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="4" fill="#FFC107"></circle>
+            <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" stroke="#FFC107" stroke-width="1.8" stroke-linecap="round"></path>
+            <path d="M17 19a4 4 0 0 0 0-8 5 5 0 0 0-9.8 1.4A4 4 0 0 0 7 20h10z" fill="#90CAF9" opacity="0.85"></path>
+          </svg>
+        </span>
+        <span class="weather-temp" id="topWeatherTemp">24°C</span>
+      </div>
+
+      <!-- Botón Rápido Modo Claro / Modo Oscuro -->
+      <button class="theme-toggle-btn" id="themeToggleBtn" title="Cambiar a Modo Claro / Oscuro" aria-label="Cambiar tema">
+        <svg id="themeMoonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="themeSunIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" style="display:none;">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+
+      <!-- Botón de Configuración de Página (Engranaje) -->
+      <button class="settings-btn" id="settingsBtn" title="Configuración de página y personalización" aria-label="Configuración de página">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Barra Izquierda Desplegable tipo Waffle de Microsoft 365 -->
+  <aside class="sidebar-drawer" id="sidebarDrawer" aria-hidden="true">
+    <div class="sidebar-header">
+      <div class="sidebar-title-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="5" cy="5" r="2.2"></circle><circle cx="12" cy="5" r="2.2"></circle><circle cx="19" cy="5" r="2.2"></circle>
+          <circle cx="5" cy="12" r="2.2"></circle><circle cx="12" cy="12" r="2.2"></circle><circle cx="19" cy="12" r="2.2"></circle>
+          <circle cx="5" cy="19" r="2.2"></circle><circle cx="12" cy="19" r="2.2"></circle><circle cx="19" cy="19" r="2.2"></circle>
+        </svg>
+        <span class="sidebar-title">Aplicaciones Attlon & 365</span>
+      </div>
+      <button class="close-sidebar-btn" id="closeSidebarBtn" title="Cerrar panel">✕</button>
+    </div>
+
+    <div class="sidebar-content">
+      <div class="sidebar-group-title">EMPRESAS ATTLON</div>
+      <div class="sidebar-apps-grid">
+        <a href="https://admin.cloudcottes.com/login" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#001B3E; border-color:#09E36F;">
+            <span style="color:#09E36F; font-weight:800; font-size:16px;">C</span>
+          </div>
+          <span class="app-label">Cottes Admin</span>
+        </a>
+        <a href="https://www.cottesgroup.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#00132B;">
+            <span style="color:#F9F6E6; font-weight:700; font-size:15px;">CG</span>
+          </div>
+          <span class="app-label">Cottés Group</span>
+        </a>
+        <a href="https://www.electroalavesa.es/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#00132B;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <span class="app-label">Electro Alavesa</span>
+        </a>
+        <a href="https://www.svcseguridad.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#00132B;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B0FF" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <span class="app-label">SVC Seguridad</span>
+        </a>
+      </div>
+
+      <div class="sidebar-group-title">GESTIÓN & RRHH</div>
+      <div class="sidebar-apps-grid">
+        <a href="https://login.payfit.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0052FF;">
+            <span style="color:#FFF; font-weight:800; font-size:16px;">P</span>
+          </div>
+          <span class="app-label">PayFit</span>
+        </a>
+        <a href="https://cottesgroup.sharepoint.com/:x:/r/sites/GlobalCotts/_layouts/15/doc2.aspx?action=edit&sourcedoc=%7B40c743a7-bc02-4fba-aad7-eeccbd1fca0b%7D&wdExp=TEAMS-TREATMENT&web=1" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#107C41;">
+            <span style="color:#FFF; font-weight:800; font-size:14px;">XLS</span>
+          </div>
+          <span class="app-label">Personal 2026</span>
+        </a>
+      </div>
+
+      <div class="sidebar-group-title">HERRAMIENTAS DE INGENIERÍA</div>
+      <div class="sidebar-apps-grid">
+        <a href="https://acc.autodesk.eu/projects" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#001B3E;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1CFF86" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+            </svg>
+          </div>
+          <span class="app-label">Autodesk Forma</span>
+        </a>
+        <a href="https://github.com/attlon" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#1E293B;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#F9F6E6">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+            </svg>
+          </div>
+          <span class="app-label">GitHub Attlon</span>
+        </a>
+        <a href="https://www.linkedin.com/company/attlon/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0A66C2;">
+            <span style="color:#FFF; font-weight:800; font-size:16px;">in</span>
+          </div>
+          <span class="app-label">LinkedIn</span>
+        </a>
+      </div>
+
+      <div class="sidebar-group-title">MICROSOFT 365</div>
+      <div class="sidebar-apps-grid">
+        <a href="https://outlook.office.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0078D4;"><span style="color:#FFF; font-weight:800;">O</span></div>
+          <span class="app-label">Outlook</span>
+        </a>
+        <a href="https://teams.microsoft.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#5B5FC7;"><span style="color:#FFF; font-weight:800;">T</span></div>
+          <span class="app-label">Teams</span>
+        </a>
+        <a href="https://cottesgroup.sharepoint.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0078D4;"><span style="color:#FFF; font-weight:800;">S</span></div>
+          <span class="app-label">SharePoint</span>
+        </a>
+        <a href="https://onedrive.live.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0078D4;"><span style="color:#FFF; font-weight:800;">D</span></div>
+          <span class="app-label">OneDrive</span>
+        </a>
+      </div>
+
+      <div class="sidebar-group-title">NORMATIVA & FUENTES OFICIALES PCI</div>
+      <div class="sidebar-apps-grid">
+        <a href="https://www.codigotecnico.org/DocumentosCTE/SeguridadEnCasoDeIncendio.html" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#B91C1C;">
+            <span style="color:#FFF; font-weight:800; font-size:11px;">CTE</span>
+          </div>
+          <span class="app-label">CTE DB-SI</span>
+        </a>
+        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#C2410C;">
+            <span style="color:#FFF; font-weight:800; font-size:11px;">RIPCI</span>
+          </div>
+          <span class="app-label">Guía RIPCI</span>
+        </a>
+        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2004-20707" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#475569;">
+            <span style="color:#FFF; font-weight:800; font-size:10px;">RSCIEI</span>
+          </div>
+          <span class="app-label">RSCIEI Ind.</span>
+        </a>
+        <a href="https://www.tecnifuego.org/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#DC2626;">
+            <span style="color:#FFF; font-weight:800; font-size:11px;">TF</span>
+          </div>
+          <span class="app-label">Tecnifuego</span>
+        </a>
+        <a href="https://www.cepreven.com/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#0F766E;">
+            <span style="color:#FFF; font-weight:800; font-size:11px;">CEP</span>
+          </div>
+          <span class="app-label">Cepreven</span>
+        </a>
+        <a href="https://link.nfpa.org/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#1E293B;">
+            <span style="color:#FFF; font-weight:800; font-size:10px;">NFPA</span>
+          </div>
+          <span class="app-label">NFPA LiNK</span>
+        </a>
+        <a href="https://www.insst.es/" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#047857;">
+            <span style="color:#FFF; font-weight:800; font-size:10px;">INSST</span>
+          </div>
+          <span class="app-label">Seguridad Laboral</span>
+        </a>
+        <a href="https://sede.policia.gob.es/portalSede/web/servicios/seguridad-privada" target="_blank" class="sidebar-app-item">
+          <div class="app-icon-wrap" style="background:#1D4ED8;">
+            <span style="color:#FFF; font-weight:800; font-size:10px;">CNP</span>
+          </div>
+          <span class="app-label">Seg. Privada</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Contenedor Central Principal -->
+  <main class="main-center-stage">
+    
+    <!-- 1. Logotipo Central de Attlon (Reemplaza a Microsoft y redirige a https://attlon.com/) -->
+    <div class="center-brand-container">
+      <a href="https://attlon.com/" target="_blank" class="attlon-hero-logo" id="attlonHeroLogo" title="Ir a la web oficial de Attlon (https://attlon.com/)">
+        <svg class="hero-symbol" width="54" height="54" viewBox="0 0 24 24" fill="none">
+          <path d="M20.3163 20.1834L15.3841 15.5361C13.32 13.5911 13.3112 10.3207 15.3649 8.36435L20.2716 3.68994C21.5441 5.01538 22.4716 6.59126 23.0197 8.29192L16.5891 10.9088C15.6057 11.3093 15.6197 12.7019 16.6111 13.0824L23.0459 15.5544C22.7868 16.3799 22.4408 17.1617 21.9889 17.9427C21.5073 18.7742 20.9512 19.515 20.3163 20.1834Z" fill="#09E36F"/>
+          <path d="M14.3131 0.321981L12.7394 6.9021C12.0809 9.65509 9.2426 11.2982 6.5164 10.505L0 8.60801C0.515812 6.84714 1.42221 5.25904 2.62635 3.93534L8.11638 8.17607C8.95622 8.82439 10.1595 8.11674 9.99486 7.07051L8.92558 0.281844C9.7733 0.093366 10.6254 0 11.53 0C12.4942 0 13.4155 0.109073 14.314 0.322856L14.3131 0.321981Z" fill="#09E36F"/>
+          <path d="M0.00537109 15.3619L6.51127 13.43C9.23396 12.6211 12.081 14.2493 12.7544 16.9988L14.3641 23.5702C12.5758 24.0056 10.742 24.0179 8.99049 23.6401L9.93104 16.7824C10.0747 15.7336 8.85738 15.0495 8.03068 15.7144L2.66412 20.031C2.0765 19.3941 1.56945 18.7056 1.11669 17.9246C0.635031 17.0931 0.268969 16.2432 0.00537109 15.361V15.3619Z" fill="#09E36F"/>
+        </svg>
+        <span class="hero-wordmark">ATTLON</span>
+      </a>
+    </div>
+
+    <!-- 3. Buscador Central Conectado con Microsoft Copilot -->
+    <div class="search-bar-wrapper">
+      <form action="https://www.bing.com/search" method="get" class="search-bar-form" id="searchForm">
+        <svg class="search-lens-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" name="q" id="searchInput" placeholder="Buscar en la web o preguntar a Copilot..." autocomplete="off" autofocus class="search-bar-input">
+        
+        <!-- Botón de Conexión Directa con Copilot -->
+        <a href="https://copilot.microsoft.com/" target="_blank" class="copilot-action-btn" id="copilotBtn" title="Abrir Microsoft Copilot">
+          <svg class="copilot-icon-svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="url(#copilotGrad)"/>
+            <defs>
+              <linearGradient id="copilotGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00A4EF"/>
+                <stop offset="0.5" stop-color="#09E36F"/>
+                <stop offset="1" stop-color="#68217A"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="copilot-btn-text">Copilot</span>
+        </a>
+      </form>
+    </div>
+
+    <!-- 3. Fila de Accesos Directos (Dinámica: Añadir, Editar y Quitar, con PayFit) -->
+    <div class="shortcuts-row" id="shortcutsRow">
+      <!-- Los marcadores se renderizan dinámicamente desde newtab.js -->
+    </div>
+
+    <!-- 4. Barra Dinámica de Noticias: España & Protección Contra Incendios (PCI) -->
+    <section class="news-ticker-container" id="newsTickerContainer">
+      <div class="news-ticker-badge">
+        <span class="news-live-dot"></span>
+        <span class="news-brand-text">PCI & ACTUALIDAD</span>
+      </div>
+
+      <!-- Filtros por categoría -->
+      <div class="news-category-filters" id="newsCategoryFilters">
+        <button class="news-cat-btn active" data-cat="all">Todas</button>
+        <button class="news-cat-btn" data-cat="pci">Protección PCI</button>
+        <button class="news-cat-btn" data-cat="spain">España</button>
+      </div>
+
+      <!-- Ticker Activo -->
+      <div class="news-ticker-content" id="newsTickerContent">
+        <span class="news-topic-tag" id="newsTopicTag">PCI · Tecnifuego</span>
+        <a href="https://www.tecnifuego.org/" target="_blank" class="news-headline-link" id="newsHeadlineLink">Cargando novedades normativas y actualidad de España...</a>
+        <span class="news-timestamp" id="newsTimestamp">En directo</span>
+      </div>
+
+      <!-- Controles del carrusel de noticias -->
+      <div class="news-ticker-controls">
+        <button class="news-ctrl-btn" id="newsPrevBtn" title="Noticia anterior">‹</button>
+        <button class="news-ctrl-btn" id="newsPauseBtn" title="Pausar / Reanudar">⏸</button>
+        <button class="news-ctrl-btn" id="newsNextBtn" title="Siguiente noticia">›</button>
+      </div>
+    </section>
+
+    <!-- 5. Fila Modular de Widgets Compactos (Clima, Calidad del Aire, Divisas, Tareas, Hidráulica y Conversor) -->
+    <section class="compact-widgets-dock" id="compactWidgetsDock">
+      
+      <!-- Widget 1: El Tiempo en Vivo (Rediseñado Compacto y Elegante) -->
+      <div class="compact-widget-card" id="widgetCardWeather" data-widget-key="weather">
+        <div class="widget-header">
+          <button class="widget-title-btn" id="weatherCityDropdownBtn" title="Cambiar ciudad">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            </svg>
+            <span id="widgetCityDisplay">Paterna</span>
+            <span class="chevron-down">⌵</span>
+          </button>
+          <div class="widget-header-actions">
+            <button class="widget-icon-action-btn" id="weatherRefreshBtn" title="Actualizar en vivo">↻</button>
+            <button class="widget-hide-btn" data-widget-key="weather" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body">
+          <div class="compact-main-stat">
+            <span class="compact-stat-icon" id="widgetWeatherIcon">⛅</span>
+            <span class="compact-stat-value" id="widgetTempDisplay">24°C</span>
+          </div>
+          <span class="compact-stat-desc" id="widgetWeatherCondition">Parcialmente nublado</span>
+          <div class="compact-submetrics">
+            <span id="weatherHumidity">Hum: 58%</span>
+            <span>•</span>
+            <span id="weatherWind">14 km/h</span>
+          </div>
+        </div>
+        <div class="compact-card-footer">
+          <a href="https://www.msn.com/es-es/eltiempo/prevision/in-Paterna,Comunidad-Valenciana-Comunitat-Valenciana" target="_blank" class="compact-link" id="msnWeatherLink">
+            MSN El Tiempo ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Widget 2: Calidad del Aire & Seguridad Ambiental (Open-Meteo Air Quality API) -->
+      <div class="compact-widget-card" id="widgetCardAir" data-widget-key="air">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#09E36F;">🍃</span> Calidad Aire
+          </span>
+          <div class="widget-header-actions">
+            <span class="badge-pill-status" id="airQualityBadge">Bueno</span>
+            <button class="widget-hide-btn" data-widget-key="air" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body">
+          <div class="compact-main-stat">
+            <span class="compact-stat-num" id="airQualityIndex">AQI 31</span>
+          </div>
+          <span class="compact-stat-desc" id="airQualitySummary">Condición ambiental óptima</span>
+          <div class="compact-submetrics">
+            <span id="airQualityPm">PM2.5: 8.1 μg/m³</span>
+            <span>•</span>
+            <span id="airQualityUv">UV: 0.6</span>
+          </div>
+        </div>
+        <div class="compact-card-footer">
+          <span class="compact-safe-note">🛡️ Seguridad Attlon</span>
+        </div>
+      </div>
+
+      <!-- Widget 3: Mercados & Divisas en Vivo (Open Exchange Rate API) -->
+      <div class="compact-widget-card" id="widgetCardCurrency" data-widget-key="currency">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#00A4EF;">💶</span> Divisas en Vivo
+          </span>
+          <div class="widget-header-actions">
+            <span class="badge-live-dot">● EN VIVO</span>
+            <button class="widget-hide-btn" data-widget-key="currency" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body">
+          <div class="currency-rates-list">
+            <div class="currency-row">
+              <span class="cur-pair">1 EUR / USD</span>
+              <span class="cur-val" id="rateEurUsd">1.134 $</span>
+            </div>
+            <div class="currency-row">
+              <span class="cur-pair">1 EUR / GBP</span>
+              <span class="cur-val" id="rateEurGbp">0.855 £</span>
+            </div>
+          </div>
+        </div>
+        <div class="compact-card-footer">
+          <a href="https://www.msn.com/es-es/dinero" target="_blank" class="compact-link">
+            MSN Dinero ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Widget 4: Tareas Rápidas & Objetivos del Día (To-Do List) -->
+      <div class="compact-widget-card" id="widgetCardTasks" data-widget-key="tasks">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#FFB900;">✓</span> Tareas del Día
+          </span>
+          <div class="widget-header-actions">
+            <span class="badge-tasks-count" id="tasksCountBadge">0/0</span>
+            <button class="widget-hide-btn" data-widget-key="tasks" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body tasks-body">
+          <div class="tasks-mini-list" id="tasksMiniList">
+            <!-- Tareas dinámicas -->
+          </div>
+          <form id="addTaskForm" class="add-task-form">
+            <input type="text" id="newTaskInput" placeholder="+ Tarea rápida..." class="mini-task-input" maxlength="40">
+          </form>
+        </div>
+      </div>
+
+      <!-- Widget 5: Calculadora Hidráulica PCI (Q = K · √P) -->
+      <div class="compact-widget-card" id="widgetCardHydraulic" data-widget-key="hydraulic">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#EF4444;">🧯</span> Hidráulica PCI
+          </span>
+          <div class="widget-header-actions">
+            <span class="badge-pill-formula">Q=K·√P</span>
+            <button class="widget-hide-btn" data-widget-key="hydraulic" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body pci-card-body">
+          <div class="pci-ctrl-group">
+            <div class="pci-ctrl-field">
+              <label for="pciPresetSelect" class="pci-label">Tipo/K:</label>
+              <select id="pciPresetSelect" class="pci-select">
+                <option value="80" selected>Rociador K-80</option>
+                <option value="115">Rociador K-115</option>
+                <option value="160">Rociador K-160</option>
+                <option value="242">ESFR K-242</option>
+                <option value="42">BIE 25mm (K=42)</option>
+                <option value="85">BIE 45mm (K=85)</option>
+                <option value="custom">K Manual...</option>
+              </select>
+            </div>
+            <div class="pci-ctrl-field" id="pciCustomKField" style="display:none;">
+              <label for="pciCustomKInput" class="pci-label">K:</label>
+              <input type="number" id="pciCustomKInput" value="80" min="1" max="1000" class="pci-num-input" style="width:48px;">
+            </div>
+            <div class="pci-ctrl-field">
+              <label for="pciPressureInput" class="pci-label">P (bar):</label>
+              <input type="number" id="pciPressureInput" value="3.5" min="0.1" max="25" step="0.1" class="pci-num-input" style="width:52px;">
+            </div>
+          </div>
+          <div class="pci-output-box">
+            <div class="pci-output-main">
+              <span class="pci-output-val" id="pciFlowResultLpm">149.7</span>
+              <span class="pci-output-unit">l/min</span>
+            </div>
+            <span class="pci-output-sub" id="pciFlowResultM3h">8.98 m³/h</span>
+          </div>
+          <div class="pci-compliance-tag" id="pciComplianceTag">✓ Conforme UNE-EN 12845</div>
+        </div>
+        <div class="compact-card-footer">
+          <span class="compact-safe-note">UNE 23500 · RIPCI</span>
+        </div>
+      </div>
+
+      <!-- Widget 6: Conversor Técnico de Unidades PCI -->
+      <div class="compact-widget-card" id="widgetCardConverter" data-widget-key="converter">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#09E36F;">📐</span> Conversor PCI
+          </span>
+          <div class="widget-header-actions">
+            <select id="pciConvModeSelect" class="pci-conv-mode-select" title="Modo de conversión">
+              <option value="press" selected>Presión</option>
+              <option value="flow">Caudal</option>
+              <option value="pipe">Tubería</option>
+            </select>
+            <button class="widget-hide-btn" data-widget-key="converter" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body pci-conv-body">
+          <!-- Modo Presión -->
+          <div class="pci-conv-panel" id="pciPanelPress">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciPressValInput" value="3.5" min="0.01" step="0.5" class="pci-conv-input">
+              <select id="pciPressUnitSelect" class="pci-conv-unit">
+                <option value="bar" selected>bar</option>
+                <option value="psi">psi</option>
+                <option value="mca">m.c.a.</option>
+                <option value="kpa">kPa</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciPressResults">
+              <span class="conv-tag">50.8 psi</span>
+              <span class="conv-tag">35.7 mca</span>
+              <span class="conv-tag">350 kPa</span>
+            </div>
+          </div>
+
+          <!-- Modo Caudal -->
+          <div class="pci-conv-panel" id="pciPanelFlow" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciFlowValInput" value="100" min="1" step="10" class="pci-conv-input">
+              <select id="pciFlowUnitSelect" class="pci-conv-unit">
+                <option value="lpm" selected>l/min</option>
+                <option value="m3h">m³/h</option>
+                <option value="gpm">GPM</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciFlowResults">
+              <span class="conv-tag">6.00 m³/h</span>
+              <span class="conv-tag">26.4 GPM</span>
+            </div>
+          </div>
+
+          <!-- Modo Tubería -->
+          <div class="pci-conv-panel" id="pciPanelPipe" style="display:none;">
+            <div class="pci-conv-input-row">
+              <select id="pciPipeSelect" class="pci-pipe-select">
+                <option value="1">1" (DN25)</option>
+                <option value="1.25">1¼" (DN32)</option>
+                <option value="1.5">1½" (DN40)</option>
+                <option value="2" selected>2" (DN50)</option>
+                <option value="2.5">2½" (DN65)</option>
+                <option value="3">3" (DN80)</option>
+                <option value="4">4" (DN100)</option>
+                <option value="6">6" (DN150)</option>
+                <option value="8">8" (DN200)</option>
+              </select>
+            </div>
+            <div class="pci-pipe-details" id="pciPipeDetails">
+              <span>Ext: <strong>60.3 mm</strong></span>
+              <span>•</span>
+              <span>Paso: <strong>52.5 mm</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="compact-card-footer">
+          <span class="compact-safe-note">UNE-EN 10255</span>
+        </div>
+      </div>
+
+      <!-- Widget 7: Dotación & Cobertura PCI y Seguridad (RIPCI · CTE DB-SI) -->
+      <div class="compact-widget-card" id="widgetCardCoverage" data-widget-key="coverage">
+        <div class="widget-header">
+          <span class="widget-title-static">
+            <span style="color:#F59E0B;">🛡️</span> Cobertura PCI
+          </span>
+          <div class="widget-header-actions">
+            <span class="badge-pill-formula">RIPCI · CTE</span>
+            <button class="widget-hide-btn" data-widget-key="coverage" title="Ocultar widget">✕</button>
+          </div>
+        </div>
+        <div class="compact-card-body pci-card-body">
+          <div class="pci-ctrl-group">
+            <div class="pci-ctrl-field" style="flex:1;">
+              <label for="pciCoverageTypeSelect" class="pci-label">Equipo:</label>
+              <select id="pciCoverageTypeSelect" class="pci-select">
+                <option value="ext" selected>Extintor (≤ 15m)</option>
+                <option value="bie25">BIE 25mm (Radio 25m)</option>
+                <option value="bie45">BIE 45mm (Radio 25m)</option>
+                <option value="spr_ord">Rociador Ordinario</option>
+                <option value="spr_high">Rociador Riesgo Alto</option>
+                <option value="detector">Detector Óptico Humo</option>
+              </select>
+            </div>
+            <div class="pci-ctrl-field">
+              <label for="pciCoverageAreaInput" class="pci-label">Área (m²):</label>
+              <input type="number" id="pciCoverageAreaInput" value="300" min="10" max="100000" step="10" class="pci-num-input" style="width:56px;">
+            </div>
+          </div>
+          <div class="pci-output-box">
+            <div class="pci-output-main">
+              <span class="pci-output-val" id="pciCoverageUnitsResult">2</span>
+              <span class="pci-output-unit" id="pciCoverageUnitLabel">uds mín.</span>
+            </div>
+            <span class="pci-output-sub" id="pciCoverageDetailResult">Radio ≤ 15 m | 21A-113B</span>
+          </div>
+          <div class="pci-compliance-tag" id="pciCoverageRuleTag">CTE DB-SI Tabla 1.1 · RIPCI</div>
+        </div>
+        <div class="compact-card-footer">
+          <span class="compact-safe-note" id="pciCoverageNote">Distancia máx. evacuación: 15 m</span>
+        </div>
+      </div>
+
+      <!-- Botón para Añadir / Gestionar Widgets en Dock -->
+      <button class="dock-manage-widgets-btn" id="dockManageWidgetsBtn" title="Añadir o gestionar widgets">
+        <span class="dock-plus-icon">+</span>
+        <span class="dock-manage-text">Añadir Widget</span>
+      </button>
+
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MENÚ CONTEXTUAL DE MARCADOR (Fiel a la Imagen 3)                      -->
+  <!-- ===================================================================== -->
+  <div class="shortcut-context-menu" id="shortcutContextMenu" aria-hidden="true">
+    <button class="ctx-item" id="ctxRenameBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+      </svg>
+      <span>Cambiar nombre</span>
+    </button>
+    <button class="ctx-item" id="ctxRemoveBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      </svg>
+      <span>Quitar</span>
+    </button>
+    <button class="ctx-item" id="ctxDisableBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+      </svg>
+      <span>Deshabilitar</span>
+    </button>
+    <button class="ctx-item" id="ctxPinBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="17" x2="12" y2="22"></line>
+        <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"></path>
+      </svg>
+      <span>Anclar a la página</span>
+    </button>
+    <button class="ctx-item" id="ctxTaskbarBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+        <line x1="8" y1="21" x2="16" y2="21"></line>
+        <line x1="12" y1="17" x2="12" y2="21"></line>
+      </svg>
+      <span>Anclar a la barra de tareas</span>
+    </button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL: AGREGAR O EDITAR ACCESO DIRECTO                                -->
+  <!-- ===================================================================== -->
+  <div class="modal-overlay" id="shortcutModalOverlay">
+    <div class="modal-card" id="shortcutModalCard">
+      <div class="modal-header">
+        <h3 class="modal-title" id="shortcutModalTitle">Agregar acceso directo</h3>
+        <button class="close-modal-btn" id="closeShortcutModalBtn">✕</button>
+      </div>
+      <form id="shortcutModalForm" class="modal-body">
+        <input type="hidden" id="editShortcutIndex" value="-1">
+        <div class="form-group">
+          <label for="shortcutNameInput">Nombre</label>
+          <input type="text" id="shortcutNameInput" placeholder="Ej. PayFit, Intranet..." required class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="shortcutUrlInput">URL del sitio web</label>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div id="shortcutModalIconPreview" class="shortcut-modal-icon-preview" title="Icono detectado automáticamente">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#09E36F" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <input type="text" id="shortcutUrlInput" placeholder="https://ejemplo.com o youtube.com" required class="form-control" style="flex:1;">
+          </div>
+          <span style="font-size:11px; color:#A0B2C6; margin-top:5px; display:block;">
+            ✨ Detección automática del logotipo oficial en alta resolución (YouTube, PayFit, Google, etc.)
+          </span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelShortcutModalBtn">Cancelar</button>
+          <button type="submit" class="btn-primary" id="saveShortcutModalBtn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL: CONFIGURAR EL TIEMPO EN VIVO (Búsqueda interactiva de Ciudad)  -->
+  <!-- ===================================================================== -->
+  <div class="modal-overlay" id="weatherModalOverlay">
+    <div class="modal-card" id="weatherModalCard">
+      <div class="modal-header">
+        <h3 class="modal-title">Configurar Ubicación y Clima en Vivo</h3>
+        <button class="close-modal-btn" id="closeWeatherModalBtn">✕</button>
+      </div>
+      <form id="weatherModalForm" class="modal-body">
+        <div class="form-group">
+          <label for="weatherCityInput">Ciudad o Municipio (Actualización en tiempo real)</label>
+          <div class="input-with-btn">
+            <input type="text" id="weatherCityInput" value="Paterna" required class="form-control" placeholder="Escribe Paterna, Valencia, Madrid, Bilbao...">
+            <button type="button" class="btn-location-detect" id="weatherDetectLocationBtn" title="Detectar mi ubicación actual automáticamente">📍 Auto-detectar</button>
+          </div>
+          <span class="input-help-text">Obtiene la temperatura real en directo para cualquier localidad.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Unidades de Temperatura</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="tempUnit" value="C" checked id="unitC"> Celsius (°C)
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="tempUnit" value="F" id="unitF"> Fahrenheit (°F)
+            </label>
+          </div>
+        </div>
+
+        <div class="weather-fetch-status" id="weatherFetchStatus" style="display:none;">
+          <span class="spinner-dot"></span> Obteniendo temperatura en directo...
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelWeatherModalBtn">Cancelar</button>
+          <button type="submit" class="btn-primary" id="saveWeatherBtn">Actualizar Clima</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PANEL LATERAL: CONFIGURACIÓN Y PERSONALIZACIÓN DE PÁGINA               -->
+  <!-- ===================================================================== -->
+  <aside class="settings-drawer" id="settingsDrawer" aria-hidden="true">
+    <div class="settings-header">
+      <span class="settings-title">Personalización y Configuración</span>
+      <button class="close-settings-btn" id="closeSettingsBtn">✕</button>
+    </div>
+    
+    <div class="settings-body">
+      
+      <!-- 1. TEMA CLARO / OSCURO (Requisito clave) -->
+      <div class="setting-group-heading">TEMA DE COLOR</div>
+      <div class="theme-mode-selector">
+        <button type="button" class="theme-mode-btn active" id="themeDarkBtn" data-mode="dark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span>Modo Oscuro</span>
+        </button>
+        <button type="button" class="theme-mode-btn" id="themeLightBtn" data-mode="light">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>Modo Claro</span>
+        </button>
+      </div>
+
+      <div class="setting-divider"></div>
+
+      <!-- 2. FONDO DE PANTALLA (Requisito clave) -->
+      <div class="setting-group-heading">FONDO DE PANTALLA</div>
+      <div class="bg-selector-grid">
+        <!-- Opción A: Vídeo Oficial Attlon -->
+        <div class="bg-choice-card active" data-bg-type="video" id="bgChoiceVideo">
+          <div class="bg-thumb-preview video-thumb">
+            <span>▶ Vídeo</span>
+          </div>
+          <span class="bg-choice-label">Edificio Attlon</span>
+        </div>
+
+        <!-- Opción B: Imagen Arquitectónica Oficial -->
+        <div class="bg-choice-card" data-bg-type="photo" id="bgChoicePhoto">
+          <div class="bg-thumb-preview photo-thumb"></div>
+          <span class="bg-choice-label">Foto Sede</span>
+        </div>
+
+        <!-- Opción C: Azul Corporativo Puro -->
+        <div class="bg-choice-card" data-bg-type="gradient" id="bgChoiceGradient">
+          <div class="bg-thumb-preview gradient-thumb"></div>
+          <span class="bg-choice-label">Azul Puro</span>
+        </div>
+
+        <!-- Opción D: Subir Imagen Propia -->
+        <div class="bg-choice-card" data-bg-type="custom" id="bgChoiceCustom">
+          <div class="bg-thumb-preview upload-thumb">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <span class="bg-choice-label">Subir Imagen</span>
+          <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
+        </div>
+      </div>
+
+      <div class="setting-divider"></div>
+
+      <!-- 3. OPCIONES DE NAVEGACIÓN Y WIDGETS -->
+
+      <!-- 4. OPCIONES DE NAVEGACIÓN Y WIDGETS -->
+      <div class="setting-group-heading">CONFIGURACIÓN GENERAL</div>
+
+      <!-- Abrir en una pestaña nueva -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Abrir en una pestaña nueva</span>
+          <span class="setting-desc">Abre marcadores y búsquedas en otra pestaña</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="newTabToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Barra de Noticias PCI y España -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Barra de Noticias Dinámica</span>
+          <span class="setting-desc">Titulares en vivo de PCI (Tecnifuego/BOE) y España</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleNewsTicker" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Detección Automática de Ubicación -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Detección de Ubicación</span>
+          <span class="setting-desc">Detecta tu ciudad y clima en vivo automáticamente</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleAutoLocation" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-divider"></div>
+
+      <!-- 3. GESTOR DE WIDGETS ACTIVOS -->
+      <div class="setting-group-heading">WIDGETS Y HERRAMIENTAS ACTIVAS</div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Clima en Vivo (Compacto)</span>
+          <span class="setting-desc">Temperatura y pronóstico real</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetWeather" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Calidad del Aire (Seguridad)</span>
+          <span class="setting-desc">Índice europeo AQI, PM2.5 y UV</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetAir" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Divisas y Mercados en Vivo</span>
+          <span class="setting-desc">Cotización EUR/USD y EUR/GBP</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetCurrency" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Tareas Rápidas del Día</span>
+          <span class="setting-desc">Lista interactiva de objetivos</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetTasks" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Hidráulica PCI (Q = K · √P)</span>
+          <span class="setting-desc">Rociadores, BIEs y cálculo de caudal</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetHydraulic" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Conversor Técnico PCI</span>
+          <span class="setting-desc">Presión (bar/psi/mca), caudal y tuberías</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetConverter" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Dotación & Cobertura PCI</span>
+          <span class="setting-desc">Extintores, BIEs y rociadores (RIPCI / CTE)</span>
+        </div>
+        <div class="setting-ctrl">
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleWidgetCoverage" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-divider"></div>
+
+      <!-- 4. GESTIÓN DE MARCADORES CORPORATIVOS -->
+      <div class="setting-group-heading">MARCADORES ATTLON</div>
+      <div class="setting-action-block">
+        <button class="btn-secondary-action" id="resetBookmarksBtn" title="Restaura los accesos corporativos iniciales (incluye PayFit)">
+          ↺ Restablecer Favoritos de Attlon
+        </button>
+        <button class="btn-sync-bookmarks" id="syncBookmarksAction">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Sincronizar Marcadores de Chrome/Edge</span>
+        </button>
+      </div>
+
+      <div class="setting-divider"></div>
+
+      <!-- 5. VERSIÓN DE LA EXTENSIÓN -->
+      <div class="setting-group-heading">VERSIÓN</div>
+      <div class="version-info-box">
+        <div class="version-row">
+          <span class="version-title">Attlon Workspace</span>
+          <span class="version-badge" id="extensionVersionBadge">v1.2.0</span>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <div class="settings-overlay" id="settingsOverlay"></div>
+
+  <!-- Toast Notifier -->
+  <div id="toast" class="toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <script src="newtab.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "attlon-browser-theme",
+  "version": "1.0.0",
+  "description": "Tema corporativo oficial de Attlon para navegadores Chromium (Google Chrome y Microsoft Edge)",
+  "main": "scripts/build.js",
+  "scripts": {
+    "generate-assets": "powershell -ExecutionPolicy Bypass -File scripts/generate-assets.ps1",
+    "build": "node scripts/build.js",
+    "validate": "node scripts/validate.js",
+    "test": "node scripts/validate.js"
+  },
+  "keywords": [
+    "chromium",
+    "chrome",
+    "edge",
+    "theme",
+    "attlon",
+    "corporate",
+    "branding",
+    "industrial-safety"
+  ],
+  "author": "Attlon Industrial Safety",
+  "license": "UNLICENSED",
+  "private": true
+}
