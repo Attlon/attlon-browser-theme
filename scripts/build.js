@@ -113,16 +113,20 @@ fs.writeFileSync(path.join(EDGE_THEME_DIR, 'manifest.json'), JSON.stringify(edge
 // B) Manifiestos de Extensión Dinámica (con nueva pestaña + marcadores)
 const chromeExtManifest = {
   ...dynamicManifest,
+  short_name: "Attlon",
   name: "Attlon Workspace & Dynamic Dashboard",
-  description: "Espacio de trabajo dinámico corporativo de Attlon. Fondo de vídeo arquitectónico, accesos directos preinstalados y sincronización nativa de marcadores."
+  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial."
 };
+delete chromeExtManifest.key; // Requerido por la tienda de Chrome
 fs.writeFileSync(path.join(CHROME_EXT_DIR, 'manifest.json'), JSON.stringify(chromeExtManifest, null, 2), 'utf8');
 
 const edgeExtManifest = {
   ...dynamicManifest,
+  short_name: "Attlon",
   name: "Attlon Workspace & Dynamic Dashboard for Edge",
-  description: "Espacio de trabajo dinámico corporativo de Attlon para Microsoft Edge. Fondo de vídeo arquitectónico, accesos directos preinstalados y sincronización nativa de marcadores."
+  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial."
 };
+delete edgeExtManifest.key; // Requerido por Microsoft Partner Center
 fs.writeFileSync(path.join(EDGE_EXT_DIR, 'manifest.json'), JSON.stringify(edgeExtManifest, null, 2), 'utf8');
 
 // 5. Empaquetado ZIP

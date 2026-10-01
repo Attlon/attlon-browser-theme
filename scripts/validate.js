@@ -172,7 +172,8 @@ assert(regContent.includes('Normativa & Fuentes PCI'), 'Archivo .reg contiene ca
 
 // 6. VALIDACION DE CLAVE PERMANENTE Y SEGURIDAD PCI
 console.log('\n--- 6. EXTENSION ID PERMANENTE Y HERRAMIENTAS PCI ---');
-assert(Boolean(dynamicExt.key && dynamicExt.key.length > 200), 'Dynamic Extension posee clave RSA permanente fijada');
+const srcDynamic = JSON.parse(fs.readFileSync(path.join(SRC_DIR, 'manifest-dynamic.json'), 'utf8'));
+assert(Boolean(srcDynamic.key && srcDynamic.key.length > 200), 'Dynamic Extension posee clave RSA permanente fijada');
 assert(Array.isArray(colorsJson.normativeBookmarks) && colorsJson.normativeBookmarks.length >= 5, 'colors.json incluye enlaces normativos PCI (RIPCI, CTE, RSCIEI, Tecnifuego, Cepreven)');
 
 // 6. RESUMEN FINAL
