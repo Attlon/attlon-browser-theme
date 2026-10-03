@@ -14,14 +14,15 @@
     "bookmarks"
   ],
   "host_permissions": [
-    "https://*.open-meteo.com/*",
+    "https://api.open-meteo.com/*",
+    "https://geocoding-api.open-meteo.com/*",
+    "https://air-quality-api.open-meteo.com/*",
     "https://open.er-api.com/*",
     "https://ipwho.is/*",
     "https://freeipapi.com/*",
     "https://news.google.com/*",
     "https://feeds.elpais.com/*",
-    "https://www.20minutos.es/*",
-    "https://*.tecnifuego.org/*"
+    "https://www.20minutos.es/*"
   ],
   "icons": {
     "16": "assets/icons/icon16.png",
