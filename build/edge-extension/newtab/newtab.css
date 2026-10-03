@@ -69,7 +69,12 @@ body.theme-light {
   --widget-glass-border: rgba(0, 27, 62, 0.12);
   --widget-glass-border-accent: rgba(5, 150, 105, 0.5);
 
-  --video-scrim: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(241, 245, 249, 0.98) 100%);
+  --video-scrim: radial-gradient(circle at center, rgba(255, 255, 255, 0.45) 0%, rgba(240, 244, 248, 0.65) 100%);
+}
+
+body.theme-light .custom-bg-layer {
+  opacity: 1 !important;
+  filter: saturate(1.05) brightness(0.96);
 }
 
 body.theme-light .video-container video {
@@ -318,7 +323,144 @@ body.theme-light .conv-tag.conv-highlight {
 
 body.theme-light .sidebar-drawer,
 body.theme-light .settings-drawer {
-  background: rgba(255, 255, 255, 0.98);
+  background: #FFFFFF !important;
+  border-left-color: rgba(0, 27, 62, 0.14) !important;
+  box-shadow: -20px 0 50px rgba(0, 27, 62, 0.15) !important;
+}
+
+body.theme-light .settings-header {
+  border-bottom-color: rgba(0, 27, 62, 0.10);
+}
+
+body.theme-light .settings-title {
+  color: #00132B;
+}
+
+body.theme-light .close-settings-btn {
+  color: #475569;
+}
+
+body.theme-light .close-settings-btn:hover {
+  color: #00132B;
+  background: rgba(0, 27, 62, 0.06);
+}
+
+body.theme-light .setting-group-heading {
+  color: #047857;
+}
+
+body.theme-light .setting-label {
+  color: #00132B;
+  font-weight: 600;
+}
+
+body.theme-light .setting-desc {
+  color: #475569;
+}
+
+body.theme-light .setting-divider {
+  background: rgba(0, 27, 62, 0.10);
+}
+
+body.theme-light .slider {
+  background-color: #CBD5E1 !important;
+  border: 1px solid #94A3B8;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light .slider:before {
+  background-color: #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+body.theme-light input:checked + .slider {
+  background-color: #059669 !important;
+  border-color: #047857;
+}
+
+body.theme-light .bg-choice-card {
+  background: #F8FAFC;
+  border-color: rgba(0, 27, 62, 0.14);
+}
+
+body.theme-light .bg-choice-card:hover {
+  background: #F1F5F9;
+  border-color: #059669;
+}
+
+body.theme-light .bg-choice-card.active {
+  background: #ECFDF5;
+  border-color: #059669;
+  box-shadow: 0 0 0 1px #059669;
+}
+
+body.theme-light .bg-choice-label {
+  color: #00132B;
+  font-weight: 600;
+}
+
+body.theme-light .theme-mode-btn {
+  background: #F8FAFC;
+  border-color: rgba(0, 27, 62, 0.14);
+  color: #00132B;
+}
+
+body.theme-light .theme-mode-btn:hover {
+  background: #F1F5F9;
+  border-color: #059669;
+}
+
+body.theme-light .theme-mode-btn.active {
+  background: #ECFDF5;
+  border-color: #059669;
+  color: #047857;
+  font-weight: 700;
+}
+
+body.theme-light .btn-secondary-action {
+  background: #F1F5F9;
+  border-color: rgba(0, 27, 62, 0.16);
+  color: #00132B;
+}
+
+body.theme-light .btn-secondary-action:hover {
+  background: #E2E8F0;
+  border-color: #059669;
+}
+
+body.theme-light .btn-restore-widgets {
+  background: #ECFDF5;
+  border-color: #059669;
+  color: #047857;
+}
+
+body.theme-light .btn-restore-widgets:hover {
+  background: #059669;
+  color: #FFFFFF;
+}
+
+body.theme-light .version-info-box {
+  background: #F8FAFC;
+  border-color: rgba(0, 27, 62, 0.12);
+}
+
+body.theme-light .version-title {
+  color: #00132B;
+}
+
+body.theme-light .version-badge {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+
+body.theme-light .aurora-green-glow {
+  opacity: 0.5;
+  background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(5, 150, 105, 0.28) 0%, rgba(9, 227, 111, 0.15) 35%, transparent 100%);
+}
+
+body.theme-light .star-particle {
+  box-shadow: 0 0 5px rgba(5, 150, 105, 0.8);
 }
 
 body.theme-light .modal-card {
@@ -408,6 +550,89 @@ body.theme-microsoft-attlon {
   transition: background 0.4s ease;
 }
 
+
+/* ==========================================================================
+   AURA VERDE EN MOVIMIENTO Y ESTRELLAS (BARRA SUPERIOR)
+   ========================================================================== */
+
+.top-aurora-stars-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 95px;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 40;
+}
+
+.aurora-green-glow {
+  position: absolute;
+  top: -45px;
+  left: -20%;
+  width: 140%;
+  height: 110px;
+  background: radial-gradient(ellipse 65% 55% at 50% 30%, rgba(9, 227, 111, 0.40) 0%, rgba(28, 255, 134, 0.22) 35%, rgba(0, 180, 216, 0.10) 65%, transparent 100%);
+  filter: blur(24px);
+  animation: greenAuraPulse 10s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes greenAuraPulse {
+  0% {
+    transform: translateX(-6%) scaleY(0.9) scaleX(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateX(5%) scaleY(1.25) scaleX(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-4%) scaleY(0.95) scaleX(0.96);
+    opacity: 0.75;
+  }
+}
+
+.stars-particle-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(9, 227, 111, 0.85);
+  animation: starTwinkle 3s infinite ease-in-out;
+}
+
+.star-particle.s1  { top: 14px; left: 6%;  width: 2px; height: 2px; animation-duration: 2.7s; animation-delay: 0.2s; }
+.star-particle.s2  { top: 24px; left: 14%; width: 3px; height: 3px; animation-duration: 4.0s; animation-delay: 0.8s; }
+.star-particle.s3  { top: 8px;  left: 23%; width: 2px; height: 2px; animation-duration: 3.2s; animation-delay: 1.5s; }
+.star-particle.s4  { top: 30px; left: 32%; width: 3px; height: 3px; animation-duration: 3.6s; animation-delay: 0.4s; }
+.star-particle.s5  { top: 12px; left: 41%; width: 2px; height: 2px; animation-duration: 2.5s; animation-delay: 1.9s; }
+.star-particle.s6  { top: 20px; left: 50%; width: 3px; height: 3px; animation-duration: 4.4s; animation-delay: 0.1s; }
+.star-particle.s7  { top: 9px;  left: 59%; width: 2px; height: 2px; animation-duration: 3.1s; animation-delay: 1.1s; }
+.star-particle.s8  { top: 26px; left: 69%; width: 3px; height: 3px; animation-duration: 3.8s; animation-delay: 0.6s; }
+.star-particle.s9  { top: 16px; left: 77%; width: 2px; height: 2px; animation-duration: 2.9s; animation-delay: 2.2s; }
+.star-particle.s10 { top: 10px; left: 86%; width: 3px; height: 3px; animation-duration: 4.2s; animation-delay: 0.3s; }
+.star-particle.s11 { top: 23px; left: 92%; width: 2px; height: 2px; animation-duration: 3.4s; animation-delay: 1.7s; }
+.star-particle.s12 { top: 13px; left: 97%; width: 3px; height: 3px; animation-duration: 3.7s; animation-delay: 1.0s; }
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
 
 /* ==========================================================================
    BARRA SUPERIOR (TOP NAV) - ESTILO MICROSOFT EDGE
@@ -2618,6 +2843,30 @@ input:checked + .slider:before {
   flex-direction: column;
   gap: 10px;
   margin-top: 4px;
+}
+
+.btn-restore-widgets {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(9, 227, 111, 0.12);
+  border: 1px solid rgba(9, 227, 111, 0.35);
+  color: var(--accent);
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.btn-restore-widgets:hover {
+  background: var(--accent);
+  color: var(--primary-dark);
+  box-shadow: 0 4px 14px rgba(9, 227, 111, 0.35);
 }
 
 .btn-secondary-action {

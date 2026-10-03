@@ -128,8 +128,8 @@ foreach ($s in $iconSizes) {
     Write-Host "Created $iconPath"
 }
 
-# 2. Render Frame Background (theme_frame.png) - Inspired Architectural CAD Engineering
-Write-Host "Rendering High-Definition Inspired Frame Background (1920x140)..."
+# 2. Render Frame Background (theme_frame.png) - Emerald Aura & Celestial Stars (No Grid!)
+Write-Host "Rendering Emerald Aura & Stars Frame Background (1920x140)..."
 $frameW = 1920
 $frameH = 140
 $bmpFrame = New-Object System.Drawing.Bitmap($frameW, $frameH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -148,36 +148,33 @@ $gradBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gFrame.FillRectangle($gradBrush, 0, 0, $frameW, $frameH)
 $gradBrush.Dispose()
 
-# Inspired architectural grid lines (engineering blueprint aesthetic)
-$gridPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(18, 9, 227, 111), 1)
-$subGridPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(12, 160, 178, 198), 1)
+# Luminous Emerald Aura across the top/center
+$auraPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+$auraRect = New-Object System.Drawing.Rectangle(-200, -80, ($frameW + 400), 160)
+$auraPath.AddEllipse($auraRect)
+$pAura = New-Object System.Drawing.Drawing2D.PathGradientBrush($auraPath)
+$pAura.CenterColor = [System.Drawing.Color]::FromArgb(90, 9, 227, 111)
+$pAura.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 0, 19, 43))
+$gFrame.FillPath($pAura, $auraPath)
+$pAura.Dispose()
+$auraPath.Dispose()
 
-# Horizontal lines
-for ($y = 20; $y -lt $frameH; $y += 20) {
-    $p = if ($y % 40 -eq 0) { $gridPen } else { $subGridPen }
-    $gFrame.DrawLine($p, 0, $y, $frameW, $y)
+# Delicate twinkling celestial micro-stars (points of light)
+$rnd = New-Object System.Random(42)
+for ($i = 0; $i -lt 85; $i++) {
+    $sx = $rnd.Next(10, ($frameW - 10))
+    $sy = $rnd.Next(6, ($frameH - 12))
+    $alpha = $rnd.Next(60, 220)
+    $isEmerald = ($rnd.Next(0, 3) -eq 0)
+    $starColor = if ($isEmerald) { [System.Drawing.Color]::FromArgb($alpha, 9, 227, 111) } else { [System.Drawing.Color]::FromArgb($alpha, 245, 248, 255) }
+    $starBrush = New-Object System.Drawing.SolidBrush($starColor)
+    $sRadius = if ($rnd.Next(0, 5) -eq 0) { 2.2 } else { 1.2 }
+    $gFrame.FillEllipse($starBrush, [float]($sx - $sRadius/2), [float]($sy - $sRadius/2), [float]$sRadius, [float]$sRadius)
+    $starBrush.Dispose()
 }
-
-# Vertical & Isometric guide lines across header
-for ($x = 40; $x -lt $frameW; $x += 40) {
-    $p = if ($x % 120 -eq 0) { $gridPen } else { $subGridPen }
-    $gFrame.DrawLine($p, $x, 0, $x, $frameH)
-}
-
-# Technical crosshair nodes and subtle engineering coordinates on right side
-$nodePen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(50, 9, 227, 111), 1)
-for ($x = 1200; $x -lt $frameW; $x += 120) {
-    for ($y = 40; $y -lt $frameH; $y += 40) {
-        $gFrame.DrawLine($nodePen, ($x - 4), $y, ($x + 4), $y)
-        $gFrame.DrawLine($nodePen, $x, ($y - 4), $x, ($y + 4))
-    }
-}
-$nodePen.Dispose()
-$gridPen.Dispose()
-$subGridPen.Dispose()
 
 # Subtle bottom border line with emerald accent
-$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(120, 9, 227, 111), 1)
+$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(100, 9, 227, 111), 1)
 $gFrame.DrawLine($penLine, 0, ($frameH - 1), $frameW, ($frameH - 1))
 $penLine.Dispose()
 $gFrame.Dispose()
@@ -199,16 +196,18 @@ $gradIn = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gFrameIn.FillRectangle($gradIn, 0, 0, $frameW, $frameH)
 $gradIn.Dispose()
 
-$subGridPenIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(8, 160, 178, 198), 1)
-for ($y = 20; $y -lt $frameH; $y += 20) {
-    $gFrameIn.DrawLine($subGridPenIn, 0, $y, $frameW, $y)
+# Faint distant stars
+$rndIn = New-Object System.Random(99)
+for ($i = 0; $i -lt 40; $i++) {
+    $sx = $rndIn.Next(10, ($frameW - 10))
+    $sy = $rndIn.Next(6, ($frameH - 12))
+    $alpha = $rndIn.Next(30, 110)
+    $starBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($alpha, 160, 178, 198))
+    $gFrameIn.FillEllipse($starBrush, [float]$sx, [float]$sy, 1.2, 1.2)
+    $starBrush.Dispose()
 }
-for ($x = 60; $x -lt $frameW; $x += 60) {
-    $gFrameIn.DrawLine($subGridPenIn, $x, 0, $x, $frameH)
-}
-$subGridPenIn.Dispose()
 
-$penLineIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(60, 30, 53, 80), 1)
+$penLineIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(40, 30, 53, 80), 1)
 $gFrameIn.DrawLine($penLineIn, 0, ($frameH - 1), $frameW, ($frameH - 1))
 $penLineIn.Dispose()
 $gFrameIn.Dispose()

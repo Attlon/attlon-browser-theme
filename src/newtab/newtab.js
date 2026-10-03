@@ -264,7 +264,8 @@ function applyThemeMode(mode) {
 // ==========================================================================
 
 function initWallpaperManager() {
-  const savedBgType = localStorage.getItem('attlon_custom_bg_type') || 'video';
+  let savedBgType = localStorage.getItem('attlon_custom_bg_type') || 'photo';
+  if (savedBgType === 'blueprint') savedBgType = 'photo';
   applyWallpaper(savedBgType);
 
   const cards = document.querySelectorAll('.bg-choice-card');
@@ -304,6 +305,7 @@ function initWallpaperManager() {
 }
 
 function applyWallpaper(bgType) {
+  if (bgType === 'blueprint') bgType = 'photo';
   const bgVideo = document.getElementById('bgVideo');
   const customBg = document.getElementById('customBgLayer');
   const cards = document.querySelectorAll('.bg-choice-card');
@@ -342,14 +344,6 @@ function applyWallpaper(bgType) {
       ? 'linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%)'
       : 'linear-gradient(135deg, #001B3E 0%, #000D1D 100%)';
     customBg.classList.add('active');
-  } else if (bgType === 'blueprint') {
-    if (bgVideo) {
-      bgVideo.pause();
-      bgVideo.style.display = 'none';
-    }
-    customBg.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #001b3e 0%, #000917 100%), linear-gradient(rgba(9, 227, 111, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(9, 227, 111, 0.08) 1px, transparent 1px)';
-    customBg.style.backgroundSize = '100% 100%, 36px 36px, 36px 36px';
-    customBg.classList.add('active');
   } else if (bgType === 'custom') {
     const savedData = localStorage.getItem('attlon_custom_bg_data');
     if (savedData) {
@@ -360,7 +354,7 @@ function applyWallpaper(bgType) {
       customBg.style.backgroundImage = `url('${savedData}')`;
       customBg.classList.add('active');
     } else {
-      applyWallpaper('video');
+      applyWallpaper('photo');
       return;
     }
   }
@@ -756,9 +750,11 @@ function initHydraulicCalculator() {
   const customField = document.getElementById('pciCustomKField');
   const customInput = document.getElementById('pciCustomKInput');
   const pressInput = document.getElementById('pciPressureInput');
+  const countSelect = document.getElementById('pciCountSelect');
   const resultLpm = document.getElementById('pciFlowResultLpm');
   const resultM3h = document.getElementById('pciFlowResultM3h');
   const compTag = document.getElementById('pciComplianceTag');
+  const noteEl = document.getElementById('pciHydraulicNote');
 
   if (!presetSelect || !pressInput || !resultLpm) return;
 
@@ -776,37 +772,51 @@ function initHydraulicCalculator() {
     let p = parseFloat(pressInput.value);
     if (isNaN(p) || p <= 0) p = 0.1;
 
-    // Fórmula hidráulica estándar: Q = K * sqrt(P)
-    const qLpm = k * Math.sqrt(p);
-    const qM3h = qLpm * 0.06;
+    let count = parseInt(countSelect ? countSelect.value : '1', 10) || 1;
 
-    resultLpm.textContent = qLpm.toFixed(1);
-    if (resultM3h) resultM3h.textContent = `${qM3h.toFixed(2)} m³/h`;
+    // Fórmula hidráulica estándar: Q_unit = K * sqrt(P)
+    const qUnitLpm = k * Math.sqrt(p);
+    const qTotalLpm = qUnitLpm * count;
+    const qTotalM3h = (qTotalLpm * 60) / 1000;
+    const reserva60m = qTotalM3h.toFixed(1);
+
+    resultLpm.textContent = qTotalLpm.toFixed(1);
+    if (resultM3h) {
+      if (count > 1) {
+        resultM3h.textContent = `${qTotalM3h.toFixed(2)} m³/h (${count} uds × ${qUnitLpm.toFixed(0)} l/m)`;
+      } else {
+        resultM3h.textContent = `${qTotalM3h.toFixed(2)} m³/h`;
+      }
+    }
 
     if (compTag) {
       if (presetVal === '42' || presetVal === '85') {
         if (p < 2.0) {
-          compTag.textContent = '⚠️ P < 2.0 bar (Mín. RIPCI)';
+          compTag.textContent = `⚠️ P < 2.0 bar (Mín. RIPCI) · Reserva: ${reserva60m} m³`;
           compTag.classList.add('warn');
         } else {
-          compTag.textContent = '✓ Conforme RIPCI (≥ 2.0 bar)';
+          compTag.textContent = `✓ Conforme RIPCI (≥ 2.0 bar) · Reserva 60m: ${reserva60m} m³`;
           compTag.classList.remove('warn');
         }
       } else {
         if (p < 0.5) {
-          compTag.textContent = '⚠️ P < 0.5 bar (Mín. UNE-EN 12845)';
+          compTag.textContent = `⚠️ P < 0.5 bar (Mín. UNE-EN 12845) · Reserva: ${reserva60m} m³`;
           compTag.classList.add('warn');
         } else {
-          compTag.textContent = '✓ Conforme UNE-EN 12845';
+          compTag.textContent = `✓ Conforme UNE-EN 12845 · Reserva 60m: ${reserva60m} m³`;
           compTag.classList.remove('warn');
         }
       }
+    }
+    if (noteEl) {
+      noteEl.textContent = `UNE 23500 · Autonomía 60 min (${reserva60m} m³)`;
     }
   }
 
   presetSelect.addEventListener('change', calculate);
   if (customInput) customInput.addEventListener('input', calculate);
   pressInput.addEventListener('input', calculate);
+  if (countSelect) countSelect.addEventListener('change', calculate);
 
   calculate();
 }
@@ -1136,14 +1146,54 @@ function initCoverageCalculator() {
     let label = 'uds mín.';
 
     switch (type) {
-      case 'ext': {
+      case 'ext':
+      case 'ext_abc6': {
         // CTE DB-SI Tabla 1.1: 1 extintor cada 15 m de recorrido en cada planta
-        // Regla técnica práctica: 1 extintor 21A-113B cada 200 m² (o fracción)
         units = Math.max(1, Math.ceil(area / 200));
         detail = 'Radio ≤ 15 m | Eficacia ≥ 21A-113B';
         rule = 'CTE DB-SI Tabla 1.1 · RIPCI';
-        footNote = 'Distancia máx. a extintor: 15 m. Altura: 80-120 cm.';
-        label = units === 1 ? 'extintor' : 'extintores';
+        footNote = 'Distancia máx. a extintor: 15 m. Altura colgado: 80-120 cm.';
+        label = units === 1 ? 'extintor 6kg' : 'extintores 6kg';
+        break;
+      }
+      case 'ext_abc9': {
+        units = Math.max(1, Math.ceil(area / 250));
+        detail = 'Radio ≤ 15 m | Eficacia ≥ 34A-233B';
+        rule = 'RIPCI Gran Superficie / Almacén';
+        footNote = 'Mayor potencia de extinción para focos industriales y carga media.';
+        label = units === 1 ? 'extintor 9kg' : 'extintores 9kg';
+        break;
+      }
+      case 'ext_co2_5': {
+        units = Math.max(1, Math.ceil(area / 100));
+        detail = 'Radio ≤ 15 m | Eficacia 89B Eléctrico';
+        rule = 'UNE 23110 · CTE DB-SI';
+        footNote = 'Dieléctrico sin residuos. Esencial en cuadros eléctricos y salas TIC.';
+        label = units === 1 ? 'extintor CO2 5kg' : 'extintores CO2 5kg';
+        break;
+      }
+      case 'ext_co2_2': {
+        units = Math.max(1, Math.ceil(area / 60));
+        detail = 'Eficacia 34B | Equipos delicados';
+        rule = 'RIPCI CPDs y Laboratorios';
+        footNote = 'Portátil ligero para atajar fuegos en rack o maquinaria de precisión.';
+        label = units === 1 ? 'extintor CO2 2kg' : 'extintores CO2 2kg';
+        break;
+      }
+      case 'ext_afff': {
+        units = Math.max(1, Math.ceil(area / 200));
+        detail = 'Eficacia 21A-183B | Líquidos combustibles';
+        rule = 'RIPCI & UNE-EN 3-7';
+        footNote = 'Extintor de agua con aditivo AFFF. No genera nube de polvo.';
+        label = units === 1 ? 'extintor AFFF 6L' : 'extintores AFFF 6L';
+        break;
+      }
+      case 'ext_carro50': {
+        units = Math.max(1, Math.ceil(area / 800));
+        detail = 'Cobertura móvil gran nave | Polvo 50kg';
+        rule = 'RIPCI Anexo I Almacenamiento';
+        footNote = 'Protección reforzada para industrias con alta carga de fuego.';
+        label = units === 1 ? 'carro 50kg' : 'carros 50kg';
         break;
       }
       case 'bie25': {
@@ -1151,7 +1201,7 @@ function initCoverageCalculator() {
         units = Math.max(1, Math.ceil(area / 500));
         detail = 'Radio 25 m | P. dinámica ≥ 2.0 bar';
         rule = 'RIPCI Anexo I · UNE-EN 671-1';
-        footNote = 'Manguera semirrígida 20m + chorro 5m. Distancia ≤ 50m.';
+        footNote = 'Manguera semirrígida 20m + chorro 5m. Distancia máx. entre BIEs ≤ 50m.';
         label = units === 1 ? 'BIE 25' : 'BIEs 25';
         break;
       }
@@ -1159,35 +1209,70 @@ function initCoverageCalculator() {
         units = Math.max(1, Math.ceil(area / 600));
         detail = 'Caudal mín. 200 l/min | P ≥ 2.0 bar';
         rule = 'RIPCI Anexo I · UNE-EN 671-2';
-        footNote = 'Uso exclusivo por bomberos o personal entrenado.';
+        footNote = 'Uso profesional bomberos o brigada entrenada. Manguera plana 20m.';
         label = units === 1 ? 'BIE 45' : 'BIEs 45';
         break;
       }
-      case 'spr_ord': {
+      case 'spr_lh': {
+        units = Math.max(4, Math.ceil(area / 21));
+        detail = '21 m² / cabeza | Distancia ≤ 4.6 m';
+        rule = 'UNE-EN 12845 (Riesgo Ligero LH)';
+        footNote = 'Densidad diseño: 2.25 mm/min. Oficinas, aulas y zonas comunes.';
+        label = 'rociadores LH';
+        break;
+      }
+      case 'spr_ord':
+      case 'spr_oh': {
         // UNE-EN 12845 Riesgo Ordinario: Cobertura estándar 12 m² por cabeza
         units = Math.max(4, Math.ceil(area / 12));
         detail = '12 m² / cabeza | Distancia ≤ 4.0 m';
-        rule = 'UNE-EN 12845 (Riesgo Ordinario)';
+        rule = 'UNE-EN 12845 (Riesgo Ordinario OH)';
         footNote = 'Densidad diseño: 5 mm/min. Área operación: 144 m².';
-        label = 'rociadores';
+        label = 'rociadores OH';
         break;
       }
-      case 'spr_high': {
+      case 'spr_high':
+      case 'spr_hhp': {
         // UNE-EN 12845 Riesgo Alto: Cobertura máx. 9 m² por cabeza
         units = Math.max(6, Math.ceil(area / 9));
         detail = '9 m² / cabeza | Distancia ≤ 3.0 m';
-        rule = 'UNE-EN 12845 (Riesgo Alto)';
-        footNote = 'Densidad diseño: 7.5 a 12.5 mm/min.';
-        label = 'rociadores';
+        rule = 'UNE-EN 12845 (Riesgo Alto HHP)';
+        footNote = 'Densidad diseño: 7.5 a 12.5 mm/min. Almacenes y naves industriales.';
+        label = 'rociadores HHP';
         break;
       }
-      case 'detector': {
+      case 'spr_esfr': {
+        units = Math.max(8, Math.ceil(area / 9));
+        detail = '9 m² / cabeza | K-242 / K-360';
+        rule = 'NFPA 13 · Supresión Rápida ESFR';
+        footNote = 'Supresión directa de incendios en almacenes de gran altura.';
+        label = 'rociadores ESFR';
+        break;
+      }
+      case 'detector':
+      case 'detector_opt': {
         // UNE 23007-14: Detectores ópticos de humo hasta 60 m² (altura ≤ 6m)
         units = Math.max(1, Math.ceil(area / 60));
         detail = '60 m² / detector | Radio ≤ 6.7 m';
         rule = 'UNE 23007-14 · RIPCI';
         footNote = 'Separación máx. a pared: 4.5 m. Altura máx: 12 m.';
-        label = units === 1 ? 'detector' : 'detectores';
+        label = units === 1 ? 'detector óptico' : 'detectores ópticos';
+        break;
+      }
+      case 'detector_term': {
+        units = Math.max(1, Math.ceil(area / 30));
+        detail = '30 m² / detector | Radio ≤ 4.4 m';
+        rule = 'UNE 23007-14 · Detectores Térmicos';
+        footNote = 'Indicado para zonas con polvo, humos o vapores de proceso.';
+        label = units === 1 ? 'detector térmico' : 'detectores térmicos';
+        break;
+      }
+      case 'scteh_exutorio': {
+        units = Math.max(1, Math.ceil(area / 200));
+        detail = 'Superficie aerodinámica Cv·Av (≥0.5%)';
+        rule = 'UNE-EN 12101-2 · CTE DB-SI Evacuación';
+        footNote = 'Evacuación de humos y gases calientes. Apertura automática 68°C.';
+        label = units === 1 ? 'exutorio SCTEH' : 'exutorios SCTEH';
         break;
       }
     }
@@ -1960,12 +2045,12 @@ function initShortcutModalHandlers() {
 // ==========================================================================
 
 function initVersionAndUpdates() {
-  let currentVersion = '1.4.0';
+  let currentVersion = '1.5.0';
   if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getManifest) {
     try {
       currentVersion = chrome.runtime.getManifest().version;
     } catch {
-      currentVersion = '1.4.0';
+      currentVersion = '1.5.0';
     }
   }
 
@@ -2088,6 +2173,21 @@ function initPageConfiguration() {
       card.style.display = show ? 'flex' : 'none';
     });
   });
+
+  // 3.1 Botón de restauración rápida de todos los widgets del dock
+  const restoreAllBtn = document.getElementById('btnRestoreAllWidgets');
+  if (restoreAllBtn) {
+    restoreAllBtn.addEventListener('click', () => {
+      widgetsMap.forEach(({ toggleId, cardId, storageKey }) => {
+        const toggle = document.getElementById(toggleId);
+        const card = document.getElementById(cardId);
+        if (toggle) toggle.checked = true;
+        if (card) card.style.display = 'flex';
+        localStorage.setItem(storageKey, 'true');
+      });
+      showToast('✓ Todos los widgets del dock han sido restaurados y activados.');
+    });
+  }
 
   // 3. Restablecer favoritos predeterminados de Attlon
   const resetBtn = document.getElementById('resetBookmarksBtn');

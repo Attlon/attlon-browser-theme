@@ -9,13 +9,32 @@
 </head>
 <body class="theme-microsoft-attlon theme-dark">
 
-  <!-- Capa de Fondo: Soporta Vídeo Oficial, Imagen Estática, Gradiente o Imagen Personalizada -->
+  <!-- Capa de Fondo: Foto Oficial Sede Attlon en Alta Definición, Gradiente o Imagen Personalizada -->
   <div class="video-container" id="videoContainer">
-    <div class="custom-bg-layer" id="customBgLayer"></div>
-    <video id="bgVideo" autoplay loop muted playsinline preload="auto">
+    <div class="custom-bg-layer active" id="customBgLayer" style="background-image: url('../assets/backgrounds/theme_ntp_background.jpg');"></div>
+    <video id="bgVideo" autoplay loop muted playsinline preload="auto" style="display:none;">
       <source src="../assets/video/building.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay" id="videoOverlay"></div>
+    <div class="video-scrim" id="videoScrim"></div>
+  </div>
+
+  <!-- Aura Verde y Estrellas en Movimiento para la Barra Superior -->
+  <div class="top-aurora-stars-container" id="topAuroraStars" aria-hidden="true">
+    <div class="aurora-green-glow"></div>
+    <div class="stars-particle-field">
+      <span class="star-particle s1"></span>
+      <span class="star-particle s2"></span>
+      <span class="star-particle s3"></span>
+      <span class="star-particle s4"></span>
+      <span class="star-particle s5"></span>
+      <span class="star-particle s6"></span>
+      <span class="star-particle s7"></span>
+      <span class="star-particle s8"></span>
+      <span class="star-particle s9"></span>
+      <span class="star-particle s10"></span>
+      <span class="star-particle s11"></span>
+      <span class="star-particle s12"></span>
+    </div>
   </div>
 
   <!-- Barra Superior Estilo Microsoft Edge con Bordes Transparentes Azulados -->
@@ -464,25 +483,41 @@
         </div>
         <div class="compact-card-body pci-card-body">
           <div class="pci-ctrl-group">
-            <div class="pci-ctrl-field">
+            <div class="pci-ctrl-field" style="flex:1;">
               <label for="pciPresetSelect" class="pci-label">Tipo/K:</label>
               <select id="pciPresetSelect" class="pci-select">
-                <option value="80" selected>Rociador K-80</option>
-                <option value="115">Rociador K-115</option>
-                <option value="160">Rociador K-160</option>
-                <option value="242">ESFR K-242</option>
+                <option value="57">K-57 (Residencial)</option>
+                <option value="80" selected>K-80 (Estándar 1/2")</option>
+                <option value="115">K-115 (Gran Caudal 3/4")</option>
+                <option value="160">K-160 (Almacén)</option>
+                <option value="200">K-200 (Gran Gálibo)</option>
+                <option value="242">K-242 (ESFR Supresión)</option>
+                <option value="360">K-360 (ESFR Altura)</option>
+                <option value="280">K-280 (CMSA Gota)</option>
                 <option value="42">BIE 25mm (K=42)</option>
                 <option value="85">BIE 45mm (K=85)</option>
+                <option value="150">Monitor Cañón (K=150)</option>
+                <option value="30">Cortina Diluvio (K=30)</option>
                 <option value="custom">K Manual...</option>
               </select>
             </div>
             <div class="pci-ctrl-field" id="pciCustomKField" style="display:none;">
               <label for="pciCustomKInput" class="pci-label">K:</label>
-              <input type="number" id="pciCustomKInput" value="80" min="1" max="1000" class="pci-num-input" style="width:48px;">
+              <input type="number" id="pciCustomKInput" value="80" min="1" max="1000" class="pci-num-input" style="width:44px;">
             </div>
             <div class="pci-ctrl-field">
               <label for="pciPressureInput" class="pci-label">P (bar):</label>
-              <input type="number" id="pciPressureInput" value="3.5" min="0.1" max="25" step="0.1" class="pci-num-input" style="width:52px;">
+              <input type="number" id="pciPressureInput" value="3.5" min="0.1" max="25" step="0.1" class="pci-num-input" style="width:46px;">
+            </div>
+            <div class="pci-ctrl-field">
+              <label for="pciCountSelect" class="pci-label">Uds:</label>
+              <select id="pciCountSelect" class="pci-select" style="width:44px;">
+                <option value="1" selected>1</option>
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="12">12</option>
+                <option value="18">18</option>
+              </select>
             </div>
           </div>
           <div class="pci-output-box">
@@ -492,10 +527,10 @@
             </div>
             <span class="pci-output-sub" id="pciFlowResultM3h">8.98 m³/h</span>
           </div>
-          <div class="pci-compliance-tag" id="pciComplianceTag">✓ Conforme UNE-EN 12845</div>
+          <div class="pci-compliance-tag" id="pciComplianceTag">✓ Conforme UNE-EN 12845 · Reserva 60m: 9.0 m³</div>
         </div>
         <div class="compact-card-footer">
-          <span class="compact-safe-note">UNE 23500 · RIPCI</span>
+          <span class="compact-safe-note" id="pciHydraulicNote">UNE 23500 · Autonomía 60 min</span>
         </div>
       </div>
 
@@ -664,12 +699,21 @@
             <div class="pci-ctrl-field" style="flex:1;">
               <label for="pciCoverageTypeSelect" class="pci-label">Equipo:</label>
               <select id="pciCoverageTypeSelect" class="pci-select">
-                <option value="ext" selected>Extintor (≤ 15m)</option>
+                <option value="ext_abc6" selected>Ext. Polvo ABC 6kg (21A)</option>
+                <option value="ext_abc9">Ext. Polvo ABC 9kg (34A)</option>
+                <option value="ext_co2_5">Ext. CO2 5kg (89B Eléctrico)</option>
+                <option value="ext_co2_2">Ext. CO2 2kg (34B Equipos)</option>
+                <option value="ext_afff">Ext. Agua+AFFF 6L (Limpio)</option>
+                <option value="ext_carro50">Carro Polvo 50kg (Almacén)</option>
                 <option value="bie25">BIE 25mm (Radio 25m)</option>
-                <option value="bie45">BIE 45mm (Radio 25m)</option>
-                <option value="spr_ord">Rociador Ordinario</option>
-                <option value="spr_high">Rociador Riesgo Alto</option>
-                <option value="detector">Detector Óptico Humo</option>
+                <option value="bie45">BIE 45mm (Radio 25m Bomberos)</option>
+                <option value="spr_lh">Rociador Riesgo Ligero LH</option>
+                <option value="spr_oh">Rociador Ordinario OH</option>
+                <option value="spr_hhp">Rociador Alto Riesgo HHP</option>
+                <option value="spr_esfr">Rociador ESFR Almacén</option>
+                <option value="detector_opt">Detector Óptico Humo</option>
+                <option value="detector_term">Detector Térmico</option>
+                <option value="scteh_exutorio">Exutorios SCTEH (Humos)</option>
               </select>
             </div>
             <div class="pci-ctrl-field">
@@ -861,36 +905,19 @@
 
       <!-- 2. FONDO DE PANTALLA (Requisito clave) -->
       <div class="setting-group-heading">FONDO DE PANTALLA</div>
-      <div class="bg-selector-grid">
-        <!-- Opción A: Vídeo Oficial Attlon -->
-        <div class="bg-choice-card active" data-bg-type="video" id="bgChoiceVideo">
-          <div class="bg-thumb-preview video-thumb">
-            <span>▶ Vídeo</span>
-          </div>
-          <span class="bg-choice-label">Edificio Attlon</span>
-        </div>
-
-        <!-- Opción B: Imagen Arquitectónica Oficial -->
-        <div class="bg-choice-card" data-bg-type="photo" id="bgChoicePhoto">
+        <!-- Opción A: Imagen Arquitectónica Oficial Sede Attlon -->
+        <div class="bg-choice-card active" data-bg-type="photo" id="bgChoicePhoto">
           <div class="bg-thumb-preview photo-thumb"></div>
           <span class="bg-choice-label">Foto Sede</span>
         </div>
 
-        <!-- Opción C: Azul Corporativo Puro -->
+        <!-- Opción B: Azul Corporativo Puro -->
         <div class="bg-choice-card" data-bg-type="gradient" id="bgChoiceGradient">
           <div class="bg-thumb-preview gradient-thumb"></div>
           <span class="bg-choice-label">Azul Puro</span>
         </div>
 
-        <!-- Opción D: Blueprint Técnico de Ingeniería PCI -->
-        <div class="bg-choice-card" data-bg-type="blueprint" id="bgChoiceBlueprint">
-          <div class="bg-thumb-preview blueprint-thumb">
-            <span>📐 CAD</span>
-          </div>
-          <span class="bg-choice-label">Plano Técnico</span>
-        </div>
-
-        <!-- Opción D: Subir Imagen Propia -->
+        <!-- Opción C: Subir Imagen Propia -->
         <div class="bg-choice-card" data-bg-type="custom" id="bgChoiceCustom">
           <div class="bg-thumb-preview upload-thumb">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1063,6 +1090,12 @@
             <span class="slider"></span>
           </label>
         </div>
+      </div>
+
+      <div style="margin-top: 12px; margin-bottom: 6px;">
+        <button class="btn-restore-widgets" id="btnRestoreAllWidgets">
+          <span>✓ Mostrar todos los widgets del dock</span>
+        </button>
       </div>
 
       <div class="setting-divider"></div>
