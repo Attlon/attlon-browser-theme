@@ -1582,52 +1582,59 @@ function initNewsTickerSystem() {
   let isPaused = false;
   let tickerInterval = null;
 
-  const POSITIONS = ['bottom-center', 'bottom-left', 'bottom-right', 'top-bar'];
-  const POS_LABELS = {
-    'bottom-center': 'Centro',
-    'bottom-left': 'Izq.',
-    'bottom-right': 'Der.',
-    'top-bar': 'Arriba'
-  };
+const NEWS_POSITIONS = ['above-shortcuts', 'between', 'below-widgets', 'top-bar'];
+const NEWS_POS_LABELS = {
+  'above-shortcuts': 'Sobre iconos',
+  'between': 'Bajo iconos',
+  'below-widgets': 'Bajo widgets',
+  'top-bar': 'Superior'
+};
+const NEWS_POS_ORDERS = {
+  'above-shortcuts': 25,
+  'between': 35,
+  'bottom-center': 35,
+  'bottom-left': 35,
+  'bottom-right': 35,
+  'below-widgets': 55,
+  'top-bar': 5
+};
 
-  function setNewsPosition(pos) {
-    if (!POSITIONS.includes(pos)) pos = 'bottom-center';
-    container.classList.remove('is-custom-floating');
-    container.style.left = '';
-    container.style.top = '';
-    localStorage.removeItem('attlon_news_free_pos');
-    container.setAttribute('data-position', pos);
-    if (posLabel) posLabel.textContent = POS_LABELS[pos] || 'Centro';
-    if (drawerPosSelect) drawerPosSelect.value = pos;
-    localStorage.setItem('attlon_news_position', pos);
+function setNewsPosition(pos) {
+  const container = document.getElementById('newsTickerContainer');
+  const posLabel = document.getElementById('newsPosLabel');
+  const drawerPosSelect = document.getElementById('newsPositionSelect');
+  if (!container) return;
+
+  if (!NEWS_POSITIONS.includes(pos)) {
+    pos = 'between';
   }
 
-  // Cargar posición guardada (libre o preset)
-  const savedFreePos = localStorage.getItem('attlon_news_free_pos');
-  if (savedFreePos) {
-    try {
-      const parsed = JSON.parse(savedFreePos);
-      container.classList.add('is-custom-floating');
-      container.style.left = `${parsed.left}px`;
-      container.style.top = `${parsed.top}px`;
-      if (posLabel) posLabel.textContent = 'Libre';
-    } catch {
-      const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
-      setNewsPosition(savedPos);
-    }
-  } else {
-    const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
-    setNewsPosition(savedPos);
-  }
+  container.classList.remove('is-custom-floating');
+  container.style.left = '';
+  container.style.top = '';
+  localStorage.removeItem('attlon_news_free_pos');
+
+  container.setAttribute('data-position', pos);
+  container.style.order = String(NEWS_POS_ORDERS[pos] || 35);
+
+  if (posLabel) posLabel.textContent = NEWS_POS_LABELS[pos] || 'Bajo iconos';
+  if (drawerPosSelect) drawerPosSelect.value = pos;
+  localStorage.setItem('attlon_news_position', pos);
+}
+
+  // Cargar posición guardada (preset)
+  localStorage.removeItem('attlon_news_free_pos'); // Limpiar cualquier posición flotante fija
+  const savedPos = localStorage.getItem('attlon_news_position') || 'between';
+  setNewsPosition(savedPos);
 
   if (posBtn) {
     posBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const currentPos = container.getAttribute('data-position') || 'bottom-center';
-      const curIdx = POSITIONS.indexOf(currentPos);
-      const nextPos = POSITIONS[(curIdx + 1) % POSITIONS.length];
+      const currentPos = container.getAttribute('data-position') || 'between';
+      const curIdx = NEWS_POSITIONS.indexOf(currentPos);
+      const nextPos = NEWS_POSITIONS[(curIdx + 1) % NEWS_POSITIONS.length];
       setNewsPosition(nextPos);
-      showToast(`Noticias ubicadas: ${POS_LABELS[nextPos]}`);
+      showToast(`Noticias ubicadas: ${NEWS_POS_LABELS[nextPos]}`);
     });
   }
 
@@ -1798,6 +1805,9 @@ function initWidgetHideAndManageButtons() {
 // 10.B NAVEGACIÓN Y ENLACES DIRECTOS EN WIDGETS (CLIC-THROUGH OFICIAL)
 // ==========================================================================
 
+let isDraggingWidget = false;
+let widgetPointerDownPos = null;
+
 function initWidgetClickthroughs() {
   // 1. Clima en Barra Superior (redirige a la previsión oficial en MSN El Tiempo)
   const topWeather = document.getElementById('topWeatherWidget');
@@ -1819,8 +1829,13 @@ function initWidgetClickthroughs() {
     weatherCard.style.cursor = 'pointer';
     weatherCard.title = 'Clic para abrir MSN El Tiempo oficial (Usa ⌵ para cambiar ciudad)';
     weatherCard.addEventListener('click', (e) => {
-      // Ignorar si el usuario interactúa con el botón de ciudad, refresco o cierre
-      if (e.target.closest('#weatherCityDropdownBtn') || e.target.closest('#weatherRefreshBtn') || e.target.closest('.widget-hide-btn')) {
+      if (isDraggingWidget) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      // Ignorar si el usuario interactúa con el botón de ciudad, refresco, cierre o tirador
+      if (e.target.closest('#weatherCityDropdownBtn') || e.target.closest('#weatherRefreshBtn') || e.target.closest('.widget-hide-btn') || e.target.closest('.widget-drag-handle')) {
         return;
       }
       const url = (currentWeatherConfig && currentWeatherConfig.msnUrl)
@@ -1836,7 +1851,12 @@ function initWidgetClickthroughs() {
     airCard.style.cursor = 'pointer';
     airCard.title = 'Clic para abrir el Índice Oficial Europeo de Calidad del Aire (EEA)';
     airCard.addEventListener('click', (e) => {
-      if (e.target.closest('.widget-hide-btn')) return;
+      if (isDraggingWidget) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.target.closest('.widget-hide-btn') || e.target.closest('.widget-drag-handle')) return;
       window.open('https://airindex.eea.europa.eu/', '_blank');
     });
   }
@@ -1847,10 +1867,33 @@ function initWidgetClickthroughs() {
     currencyCard.style.cursor = 'pointer';
     currencyCard.title = 'Clic para abrir cotizaciones oficiales en MSN Dinero';
     currencyCard.addEventListener('click', (e) => {
-      if (e.target.closest('.widget-hide-btn')) return;
+      if (isDraggingWidget) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      if (e.target.closest('.widget-hide-btn') || e.target.closest('.widget-drag-handle')) return;
       window.open('https://www.msn.com/es-es/dinero', '_blank');
     });
   }
+
+  // Medidor de desplazamiento de ratón para suprimir clics accidentales si el usuario intentó arrastrar
+  [weatherCard, airCard, currencyCard].forEach((card) => {
+    if (!card) return;
+    card.addEventListener('mousedown', (e) => {
+      widgetPointerDownPos = { x: e.clientX, y: e.clientY };
+    });
+    card.addEventListener('mouseup', (e) => {
+      if (widgetPointerDownPos) {
+        const dist = Math.hypot(e.clientX - widgetPointerDownPos.x, e.clientY - widgetPointerDownPos.y);
+        if (dist > 8) {
+          isDraggingWidget = true;
+          setTimeout(() => { isDraggingWidget = false; }, 300);
+        }
+      }
+      widgetPointerDownPos = null;
+    });
+  });
 }
 
 // ==========================================================================
@@ -1888,45 +1931,56 @@ function initWidgetsDragAndDrop() {
 
     // Dragstart
     card.addEventListener('dragstart', (e) => {
-      // Ignorar si se hace clic en elementos interactivos internos
-      if (e.target.closest('input') || e.target.closest('select') || e.target.closest('button') || e.target.closest('a')) {
+      // Ignorar si se hace clic en elementos interactivos que no sean el tirador
+      if (e.target.closest('input') || e.target.closest('select') || e.target.closest('button')) {
         if (!e.target.classList.contains('widget-drag-handle')) {
           e.preventDefault();
           return;
         }
       }
+
       draggedCard = card;
+      isDraggingWidget = true;
       e.dataTransfer.setData('text/plain', card.getAttribute('data-widget-key') || '');
       e.dataTransfer.effectAllowed = 'move';
       card.classList.add('dragging');
+      dock.classList.add('is-reordering-widgets');
+
+      if (e.dataTransfer.setDragImage) {
+        try {
+          e.dataTransfer.setDragImage(card, card.offsetWidth / 2, 25);
+        } catch (_) {}
+      }
     });
 
-    // Dragover
+    // Dragover: detecta si se inserta a la izquierda o derecha de la tarjeta
     card.addEventListener('dragover', (e) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
-      if (draggedCard && draggedCard !== card) {
-        card.classList.add('drag-over');
-      }
+      if (!draggedCard || draggedCard === card) return;
+
+      const rect = card.getBoundingClientRect();
+      const isLeftHalf = (e.clientX < rect.left + rect.width / 2);
+
+      card.classList.toggle('drag-over-left', isLeftHalf);
+      card.classList.toggle('drag-over-right', !isLeftHalf);
     });
 
     // Dragleave
     card.addEventListener('dragleave', () => {
-      card.classList.remove('drag-over');
+      card.classList.remove('drag-over-left', 'drag-over-right');
     });
 
-    // Drop
+    // Drop: reordenación limpia en cuadrícula sin solapamiento
     card.addEventListener('drop', (e) => {
       e.preventDefault();
-      card.classList.remove('drag-over');
+      card.classList.remove('drag-over-left', 'drag-over-right');
       if (!draggedCard || draggedCard === card) return;
 
       const rect = card.getBoundingClientRect();
-      const midX = rect.left + rect.width / 2;
-      const midY = rect.top + rect.height / 2;
+      const isLeftHalf = (e.clientX < rect.left + rect.width / 2);
 
-      // Inserción antes o después según cursor
-      if (e.clientY < midY || (Math.abs(e.clientY - midY) < 35 && e.clientX < midX)) {
+      if (isLeftHalf) {
         dock.insertBefore(draggedCard, card);
       } else {
         dock.insertBefore(draggedCard, card.nextSibling);
@@ -1938,32 +1992,49 @@ function initWidgetsDragAndDrop() {
         .map((c) => c.getAttribute('data-widget-key'))
         .filter(Boolean);
       localStorage.setItem('attlon_widgets_order', JSON.stringify(orderKeys));
-      showToast('✓ Distribución de widgets personalizada y guardada');
+      showToast('✓ Widget reordenado correctamente');
     });
 
     // Dragend
     card.addEventListener('dragend', () => {
-      card.classList.remove('dragging');
-      dock.querySelectorAll('.compact-widget-card').forEach((c) => c.classList.remove('drag-over'));
+      dock.classList.remove('is-reordering-widgets');
+      dock.querySelectorAll('.compact-widget-card').forEach((c) => {
+        c.classList.remove('dragging', 'drag-over-left', 'drag-over-right');
+      });
       draggedCard = null;
+      setTimeout(() => { isDraggingWidget = false; }, 300);
     });
   });
 }
 
 // ==========================================================================
-// 10.D DRAG & DROP Y PERSONALIZACIÓN DE POSICIÓN DE NOTICIAS
+// 10.D DRAG & DROP Y PERSONALIZACIÓN DE POSICIÓN DE NOTICIAS (SIN SOLAPAMIENTO)
 // ==========================================================================
 
 function initNewsDragAndDrop() {
   const container = document.getElementById('newsTickerContainer');
   const handle = document.getElementById('newsDragHandle');
-  if (!container || !handle) return;
+  const stage = document.querySelector('.main-center-stage');
+  const shortcutsRow = document.getElementById('shortcutsRow');
+  const widgetsDock = document.getElementById('compactWidgetsDock');
+  const searchWrapper = document.querySelector('.search-bar-wrapper');
+
+  if (!container || !handle || !stage) return;
 
   let isDragging = false;
-  let startX = 0;
-  let startY = 0;
-  let origLeft = 0;
-  let origTop = 0;
+  let dropIndicator = null;
+  let targetPosition = 'between';
+
+  function getOrCreateIndicator() {
+    let ind = document.getElementById('newsDropIndicator');
+    if (!ind) {
+      ind = document.createElement('div');
+      ind.className = 'news-drop-indicator';
+      ind.id = 'newsDropIndicator';
+      ind.innerHTML = '<span>⠿ Soltar aquí la barra de noticias</span>';
+    }
+    return ind;
+  }
 
   handle.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
@@ -1971,96 +2042,70 @@ function initNewsDragAndDrop() {
     e.stopPropagation();
 
     isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
+    container.classList.add('is-dragging-news');
+    dropIndicator = getOrCreateIndicator();
+    stage.appendChild(dropIndicator);
 
-    const rect = container.getBoundingClientRect();
-    origLeft = rect.left;
-    origTop = rect.top;
-
-    container.classList.add('dragging');
-    container.classList.add('is-custom-floating');
-    container.style.left = `${origLeft}px`;
-    container.style.top = `${origTop}px`;
     try {
       handle.setPointerCapture(e.pointerId);
     } catch {}
   });
 
   handle.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
+    if (!isDragging || !dropIndicator) return;
     e.preventDefault();
 
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
+    const curY = e.clientY;
+    const searchRect = searchWrapper ? searchWrapper.getBoundingClientRect() : { top: 120, bottom: 180 };
+    const shortcutsRect = shortcutsRow ? shortcutsRow.getBoundingClientRect() : { top: 220, bottom: 320 };
+    const dockRect = widgetsDock ? widgetsDock.getBoundingClientRect() : { top: 400, bottom: 600 };
 
-    let newLeft = Math.max(10, Math.min(window.innerWidth - container.offsetWidth - 10, origLeft + dx));
-    let newTop = Math.max(10, Math.min(window.innerHeight - container.offsetHeight - 10, origTop + dy));
-
-    container.style.left = `${newLeft}px`;
-    container.style.top = `${newTop}px`;
+    if (curY < searchRect.top + 20) {
+      // 1. Barra superior
+      targetPosition = 'top-bar';
+      dropIndicator.style.order = '5';
+      dropIndicator.innerHTML = '<span>↑ Barra Superior (Arriba del todo)</span>';
+    } else if (curY < (shortcutsRect.top + shortcutsRect.height / 2)) {
+      // 2. Sobre los marcadores (Entre buscador y marcadores)
+      targetPosition = 'above-shortcuts';
+      dropIndicator.style.order = '25';
+      dropIndicator.innerHTML = '<span>⠿ Sobre los Marcadores (Ajuste automático de iconos)</span>';
+    } else if (curY < (dockRect.top + dockRect.height / 2)) {
+      // 3. Bajo marcadores (Entre marcadores y widgets)
+      targetPosition = 'between';
+      dropIndicator.style.order = '35';
+      dropIndicator.innerHTML = '<span>⠿ Bajo los Marcadores (Entre iconos y widgets)</span>';
+    } else {
+      // 4. Bajo los widgets (Al fondo)
+      targetPosition = 'below-widgets';
+      dropIndicator.style.order = '55';
+      dropIndicator.innerHTML = '<span>↓ Bajo los Widgets (Al fondo del escenario)</span>';
+    }
   });
 
   function stopNewsDrag(e) {
     if (!isDragging) return;
     isDragging = false;
-    container.classList.remove('dragging');
+    container.classList.remove('is-dragging-news');
+
+    if (dropIndicator && dropIndicator.parentNode) {
+      dropIndicator.parentNode.removeChild(dropIndicator);
+    }
+    dropIndicator = null;
+
     try {
       handle.releasePointerCapture(e.pointerId);
     } catch {}
 
-    const rect = container.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
-    const midX = rect.left + rect.width / 2;
-    const posLabel = document.getElementById('newsPosLabel');
+    setNewsPosition(targetPosition);
 
-    if (midY < 170) {
-      // Arriba
-      container.classList.remove('is-custom-floating');
-      container.style.left = '';
-      container.style.top = '';
-      localStorage.removeItem('attlon_news_free_pos');
-      container.setAttribute('data-position', 'top-bar');
-      if (posLabel) posLabel.textContent = 'Arriba';
-      localStorage.setItem('attlon_news_position', 'top-bar');
-      showToast('✓ Noticias fijadas en la barra superior');
-    } else if (midX < 360 && midY > 280) {
-      // Izquierda
-      container.classList.remove('is-custom-floating');
-      container.style.left = '';
-      container.style.top = '';
-      localStorage.removeItem('attlon_news_free_pos');
-      container.setAttribute('data-position', 'bottom-left');
-      if (posLabel) posLabel.textContent = 'Izq.';
-      localStorage.setItem('attlon_news_position', 'bottom-left');
-      showToast('✓ Noticias alineadas a la izquierda');
-    } else if (midX > (window.innerWidth - 360) && midY > 280) {
-      // Derecha
-      container.classList.remove('is-custom-floating');
-      container.style.left = '';
-      container.style.top = '';
-      localStorage.removeItem('attlon_news_free_pos');
-      container.setAttribute('data-position', 'bottom-right');
-      if (posLabel) posLabel.textContent = 'Der.';
-      localStorage.setItem('attlon_news_position', 'bottom-right');
-      showToast('✓ Noticias alineadas a la derecha');
-    } else if (Math.abs(midX - window.innerWidth / 2) < 220 && midY > (window.innerHeight - 300)) {
-      // Centro inferior
-      container.classList.remove('is-custom-floating');
-      container.style.left = '';
-      container.style.top = '';
-      localStorage.removeItem('attlon_news_free_pos');
-      container.setAttribute('data-position', 'bottom-center');
-      if (posLabel) posLabel.textContent = 'Centro';
-      localStorage.setItem('attlon_news_position', 'bottom-center');
-      showToast('✓ Noticias centradas en la parte inferior');
-    } else {
-      // Guardar posición libre personalizada
-      const finalPos = { left: Math.round(rect.left), top: Math.round(rect.top) };
-      localStorage.setItem('attlon_news_free_pos', JSON.stringify(finalPos));
-      if (posLabel) posLabel.textContent = 'Libre';
-      showToast('✓ Posición libre de noticias guardada');
-    }
+    const labels = {
+      'above-shortcuts': 'Sobre los marcadores (iconos ajustados)',
+      'between': 'Bajo los marcadores',
+      'below-widgets': 'Bajo los widgets',
+      'top-bar': 'En la barra superior'
+    };
+    showToast(`✓ Noticias ubicadas: ${labels[targetPosition] || targetPosition}`);
   }
 
   handle.addEventListener('pointerup', stopNewsDrag);

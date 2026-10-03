@@ -1371,30 +1371,54 @@ body.theme-light .news-floating-ambient {
 }
 
 /* Posicionamiento en pantalla según selección: 100% integrado en el flujo, sin superposición de iconos */
-.news-floating-ambient[data-position="bottom-center"] {
-  order: 40;
+.news-floating-ambient[data-position="above-shortcuts"] {
+  order: 25 !important;
+  margin: 10px auto 22px auto;
   text-align: center;
-  align-self: center;
-}
-
-.news-floating-ambient[data-position="bottom-left"] {
-  order: 40;
-  text-align: left;
   align-self: center;
   width: 100%;
   max-width: 820px;
 }
 
+.news-floating-ambient[data-position="between"],
+.news-floating-ambient[data-position="bottom-center"] {
+  order: 35 !important;
+  margin: 10px auto 26px auto;
+  text-align: center;
+  align-self: center;
+  width: 100%;
+  max-width: 820px;
+}
+
+.news-floating-ambient[data-position="bottom-left"] {
+  order: 35 !important;
+  text-align: left;
+  align-self: center;
+  width: 100%;
+  max-width: 820px;
+  margin: 10px auto 26px auto;
+}
+
 .news-floating-ambient[data-position="bottom-right"] {
-  order: 40;
+  order: 35 !important;
   text-align: right;
+  align-self: center;
+  width: 100%;
+  max-width: 820px;
+  margin: 10px auto 26px auto;
+}
+
+.news-floating-ambient[data-position="below-widgets"] {
+  order: 55 !important;
+  margin: 24px auto 14px auto;
+  text-align: center;
   align-self: center;
   width: 100%;
   max-width: 820px;
 }
 
 .news-floating-ambient[data-position="top-bar"] {
-  order: 5;
+  order: 5 !important;
   margin: 0 auto 22px auto;
   text-align: center;
   align-self: center;
@@ -1567,18 +1591,45 @@ body.theme-light .news-ctrl-btn:hover {
   cursor: -webkit-grabbing !important;
 }
 
-.news-floating-ambient.dragging {
-  opacity: 0.8;
+.news-floating-ambient.dragging,
+.news-floating-ambient.is-dragging-news {
+  opacity: 0.55;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(9, 227, 111, 0.45) !important;
   border-color: var(--attlon-green) !important;
-  transform: scale(0.99);
+  transform: scale(0.98);
+}
+
+.news-drop-indicator {
+  width: 100%;
+  max-width: 820px;
+  height: 42px;
+  border: 2px dashed var(--attlon-green);
+  background: rgba(9, 227, 111, 0.12);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--attlon-green);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 12px auto;
+  box-shadow: 0 0 24px rgba(9, 227, 111, 0.35);
+  animation: pulseIndicator 1.5s infinite;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@keyframes pulseIndicator {
+  0% { opacity: 0.7; transform: scale(0.995); }
+  50% { opacity: 1; transform: scale(1.005); }
+  100% { opacity: 0.7; transform: scale(0.995); }
 }
 
 .news-floating-ambient.is-custom-floating {
-  position: fixed !important;
-  z-index: 800;
-  margin: 0 !important;
-  max-width: 820px;
+  display: none !important;
 }
 
 /* Envoltorio clickeable del texto de noticias (Titular + Mini-resumen + Chip) */
@@ -1757,6 +1808,26 @@ body.theme-light .news-ambient-clickwrap:hover .news-action-chip {
   border-color: var(--attlon-green) !important;
 }
 
+.compact-widgets-dock.is-reordering-widgets .compact-widget-card * {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.compact-widget-card.drag-over-left {
+  border-left: 3px solid var(--attlon-green) !important;
+  box-shadow: -8px 0 22px rgba(9, 227, 111, 0.45) !important;
+  transform: translateX(4px) scale(1.02);
+  border-color: var(--attlon-green) !important;
+}
+
+.compact-widget-card.drag-over-right {
+  border-right: 3px solid var(--attlon-green) !important;
+  box-shadow: 8px 0 22px rgba(9, 227, 111, 0.45) !important;
+  transform: translateX(-4px) scale(1.02);
+  border-color: var(--attlon-green) !important;
+}
+
 .compact-widget-card.drag-over {
   outline: 2px dashed var(--attlon-green);
   outline-offset: 4px;
@@ -1768,24 +1839,25 @@ body.theme-light .news-ambient-clickwrap:hover .news-action-chip {
   cursor: grab;
   cursor: -webkit-grab;
   user-select: none;
-  opacity: 0.45;
-  font-size: 13px;
+  -webkit-user-select: none;
+  opacity: 0.65;
+  font-size: 15px;
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 4px;
+  padding: 3px 6px;
   border-radius: 4px;
   color: var(--text-muted);
-  transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
-  margin-right: 2px;
+  transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  margin-right: 4px;
 }
 
 .widget-drag-handle:hover {
   opacity: 1;
   color: var(--attlon-green);
-  background: rgba(9, 227, 111, 0.12);
-  transform: scale(1.15);
+  background: rgba(9, 227, 111, 0.15);
+  transform: scale(1.18);
 }
 
 .widget-drag-handle:active {
