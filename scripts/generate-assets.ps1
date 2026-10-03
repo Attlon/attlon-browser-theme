@@ -128,7 +128,71 @@ foreach ($s in $iconSizes) {
     Write-Host "Created $iconPath"
 }
 
-# 2. Render Frame Background (theme_frame.png) - Emerald Aura & Celestial Stars (No Grid!)
+# Helper to draw a radiant 4-pointed sparkle star
+function Draw-StarSparkle {
+    param(
+        [System.Drawing.Graphics]$g,
+        [float]$cx,
+        [float]$cy,
+        [float]$size,
+        [int]$alpha,
+        [bool]$isEmerald
+    )
+    $coreColor = [System.Drawing.Color]::FromArgb($alpha, 255, 255, 255)
+    $glowColor = if ($isEmerald) { [System.Drawing.Color]::FromArgb([int]($alpha * 0.75), 9, 227, 111) } else { [System.Drawing.Color]::FromArgb([int]($alpha * 0.65), 28, 255, 200) }
+    
+    # 1. Soft radial glow halo
+    $haloPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+    $haloPath.AddEllipse([float]($cx - $size * 1.3), [float]($cy - $size * 1.3), [float]($size * 2.6), [float]($size * 2.6))
+    $haloBrush = New-Object System.Drawing.Drawing2D.PathGradientBrush($haloPath)
+    $haloBrush.CenterColor = $glowColor
+    $haloBrush.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 0, 19, 43))
+    $g.FillPath($haloBrush, $haloPath)
+    $haloBrush.Dispose()
+    $haloPath.Dispose()
+
+    # 2. 4-point celestial diamond rays
+    $pen = New-Object System.Drawing.Pen($coreColor, 1.2)
+    $g.DrawLine($pen, [float]($cx - $size * 1.7), $cy, [float]($cx + $size * 1.7), $cy)
+    $g.DrawLine($pen, $cx, [float]($cy - $size * 1.7), $cx, [float]($cy + $size * 1.7))
+    $pen.Dispose()
+
+    # 3. Bright white-hot core
+    $coreBrush = New-Object System.Drawing.SolidBrush($coreColor)
+    $g.FillEllipse($coreBrush, [float]($cx - 1.2), [float]($cy - 1.2), 2.4, 2.4)
+    $coreBrush.Dispose()
+}
+
+# Helper to draw an undulating emerald aurora wave
+function Draw-AuroraBand {
+    param(
+        [System.Drawing.Graphics]$g,
+        [int]$width,
+        [float]$centerY,
+        [float]$height,
+        [int]$alpha,
+        [System.Drawing.Color]$color
+    )
+    $cloudCount = 14
+    $step = $width / ($cloudCount - 1)
+    for ($c = 0; $c -lt $cloudCount; $c++) {
+        $x = $c * $step
+        $w = $step * 2.4
+        $yOffset = [Math]::Sin($c * 0.9) * 8
+        $y = $centerY + $yOffset
+        
+        $p = New-Object System.Drawing.Drawing2D.GraphicsPath
+        $p.AddEllipse([float]($x - $w / 2), [float]($y - $height / 2), [float]$w, [float]$height)
+        $brush = New-Object System.Drawing.Drawing2D.PathGradientBrush($p)
+        $brush.CenterColor = [System.Drawing.Color]::FromArgb($alpha, $color.R, $color.G, $color.B)
+        $brush.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 0, 19, 43))
+        $g.FillPath($brush, $p)
+        $brush.Dispose()
+        $p.Dispose()
+    }
+}
+
+# 2. Render Frame Background (theme_frame.png) - Emerald Aura & Celestial Stars across the Tab Strip!
 Write-Host "Rendering Emerald Aura & Stars Frame Background (1920x140)..."
 $frameW = 1920
 $frameH = 140
@@ -137,7 +201,7 @@ $gFrame = [System.Drawing.Graphics]::FromImage($bmpFrame)
 $gFrame.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
 
 # Corporate deep navy gradient
-$cFrameTop = [System.Drawing.Color]::FromArgb(255, 0, 11, 26)
+$cFrameTop = [System.Drawing.Color]::FromArgb(255, 0, 9, 22)
 $cFrameBottom = [System.Drawing.Color]::FromArgb(255, 0, 19, 43)
 $gradBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
     (New-Object System.Drawing.Point(0, 0)),
@@ -148,33 +212,46 @@ $gradBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gFrame.FillRectangle($gradBrush, 0, 0, $frameW, $frameH)
 $gradBrush.Dispose()
 
-# Luminous Emerald Aura across the top/center
-$auraPath = New-Object System.Drawing.Drawing2D.GraphicsPath
-$auraRect = New-Object System.Drawing.Rectangle(-200, -80, ($frameW + 400), 160)
-$auraPath.AddEllipse($auraRect)
-$pAura = New-Object System.Drawing.Drawing2D.PathGradientBrush($auraPath)
-$pAura.CenterColor = [System.Drawing.Color]::FromArgb(90, 9, 227, 111)
-$pAura.SurroundColors = @([System.Drawing.Color]::FromArgb(0, 0, 19, 43))
-$gFrame.FillPath($pAura, $auraPath)
-$pAura.Dispose()
-$auraPath.Dispose()
+# VIBRANT EMERALD AURORA BANDS DIRECTLY IN THE TAB STRIP (Y: 2px to 45px)
+$cEmeraldNeon = [System.Drawing.Color]::FromArgb(255, 9, 227, 111)
+$cEmeraldCyan = [System.Drawing.Color]::FromArgb(255, 28, 255, 170)
+$cAquaGlow    = [System.Drawing.Color]::FromArgb(255, 0, 235, 195)
 
-# Delicate twinkling celestial micro-stars (points of light)
-$rnd = New-Object System.Random(42)
-for ($i = 0; $i -lt 85; $i++) {
-    $sx = $rnd.Next(10, ($frameW - 10))
-    $sy = $rnd.Next(6, ($frameH - 12))
-    $alpha = $rnd.Next(60, 220)
-    $isEmerald = ($rnd.Next(0, 3) -eq 0)
-    $starColor = if ($isEmerald) { [System.Drawing.Color]::FromArgb($alpha, 9, 227, 111) } else { [System.Drawing.Color]::FromArgb($alpha, 245, 248, 255) }
-    $starBrush = New-Object System.Drawing.SolidBrush($starColor)
-    $sRadius = if ($rnd.Next(0, 5) -eq 0) { 2.2 } else { 1.2 }
-    $gFrame.FillEllipse($starBrush, [float]($sx - $sRadius/2), [float]($sy - $sRadius/2), [float]$sRadius, [float]$sRadius)
-    $starBrush.Dispose()
+# Layer 1: Core vibrant aurora ribbon
+Draw-AuroraBand -g $gFrame -width $frameW -centerY 18 -height 44 -alpha 175 -color $cEmeraldNeon
+
+# Layer 2: Luminous cyan undertone ribbon
+Draw-AuroraBand -g $gFrame -width $frameW -centerY 26 -height 52 -alpha 135 -color $cEmeraldCyan
+
+# Layer 3: High rim glow along top of tabs
+Draw-AuroraBand -g $gFrame -width $frameW -centerY 8 -height 26 -alpha 150 -color $cAquaGlow
+
+# SPARKLING 4-POINT CELESTIAL STARS ACROSS THE TAB BAR
+$rnd = New-Object System.Random(777)
+for ($s = 0; $s -lt 45; $s++) {
+    $sx = $rnd.Next(15, ($frameW - 15))
+    $sy = $rnd.Next(4, 46) # Directly where tabs sit!
+    $size = [float]($rnd.Next(5, 10))
+    $alpha = $rnd.Next(180, 255)
+    $isEmerald = ($rnd.Next(0, 2) -eq 0)
+    Draw-StarSparkle -g $gFrame -cx $sx -cy $sy -size $size -alpha $alpha -isEmerald $isEmerald
 }
 
-# Subtle bottom border line with emerald accent
-$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(100, 9, 227, 111), 1)
+# DELICATE TWINKLING STAR DUST (points of light)
+for ($i = 0; $i -lt 110; $i++) {
+    $sx = $rnd.Next(8, ($frameW - 8))
+    $sy = $rnd.Next(2, 65)
+    $alpha = $rnd.Next(100, 240)
+    $isEm = ($rnd.Next(0, 3) -eq 0)
+    $sColor = if ($isEm) { [System.Drawing.Color]::FromArgb($alpha, 9, 227, 111) } else { [System.Drawing.Color]::FromArgb($alpha, 255, 255, 255) }
+    $sBrush = New-Object System.Drawing.SolidBrush($sColor)
+    $rad = if ($rnd.Next(0, 4) -eq 0) { 2.0 } else { 1.2 }
+    $gFrame.FillEllipse($sBrush, [float]($sx - $rad/2), [float]($sy - $rad/2), [float]$rad, [float]$rad)
+    $sBrush.Dispose()
+}
+
+# Bottom border line with emerald accent
+$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(120, 9, 227, 111), 1)
 $gFrame.DrawLine($penLine, 0, ($frameH - 1), $frameW, ($frameH - 1))
 $penLine.Dispose()
 $gFrame.Dispose()
@@ -185,7 +262,7 @@ $bmpFrame.Dispose()
 Write-Host "Rendering Inactive Frame Background (1920x140)..."
 $bmpFrameIn = New-Object System.Drawing.Bitmap($frameW, $frameH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $gFrameIn = [System.Drawing.Graphics]::FromImage($bmpFrameIn)
-$cInTop = [System.Drawing.Color]::FromArgb(255, 0, 7, 18)
+$cInTop = [System.Drawing.Color]::FromArgb(255, 0, 6, 16)
 $cInBottom = [System.Drawing.Color]::FromArgb(255, 0, 13, 29)
 $gradIn = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
     (New-Object System.Drawing.Point(0, 0)),
@@ -196,18 +273,20 @@ $gradIn = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gFrameIn.FillRectangle($gradIn, 0, 0, $frameW, $frameH)
 $gradIn.Dispose()
 
-# Faint distant stars
-$rndIn = New-Object System.Random(99)
-for ($i = 0; $i -lt 40; $i++) {
-    $sx = $rndIn.Next(10, ($frameW - 10))
-    $sy = $rndIn.Next(6, ($frameH - 12))
-    $alpha = $rndIn.Next(30, 110)
-    $starBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($alpha, 160, 178, 198))
-    $gFrameIn.FillEllipse($starBrush, [float]$sx, [float]$sy, 1.2, 1.2)
-    $starBrush.Dispose()
+# Inactive aurora (gentler)
+Draw-AuroraBand -g $gFrameIn -width $frameW -centerY 18 -height 40 -alpha 100 -color $cEmeraldNeon
+
+# Inactive sparkle stars
+$rndIn = New-Object System.Random(888)
+for ($s = 0; $s -lt 22; $s++) {
+    $sx = $rndIn.Next(15, ($frameW - 15))
+    $sy = $rndIn.Next(6, 44)
+    $size = [float]($rndIn.Next(4, 7))
+    $alpha = $rndIn.Next(110, 180)
+    Draw-StarSparkle -g $gFrameIn -cx $sx -cy $sy -size $size -alpha $alpha -isEmerald $true
 }
 
-$penLineIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(40, 30, 53, 80), 1)
+$penLineIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(50, 9, 227, 111), 1)
 $gFrameIn.DrawLine($penLineIn, 0, ($frameH - 1), $frameW, ($frameH - 1))
 $penLineIn.Dispose()
 $gFrameIn.Dispose()
@@ -220,7 +299,7 @@ $tbW = 1920
 $tbH = 90
 $bmpToolbar = New-Object System.Drawing.Bitmap($tbW, $tbH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $gToolbar = [System.Drawing.Graphics]::FromImage($bmpToolbar)
-$cToolbarTop = [System.Drawing.Color]::FromArgb(255, 0, 24, 55)
+$cToolbarTop = [System.Drawing.Color]::FromArgb(255, 0, 22, 50)
 $cToolbarBottom = [System.Drawing.Color]::FromArgb(255, 0, 27, 62)
 $gradTb = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
     (New-Object System.Drawing.Point(0, 0)),
@@ -231,10 +310,23 @@ $gradTb = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gToolbar.FillRectangle($gradTb, 0, 0, $tbW, $tbH)
 $gradTb.Dispose()
 
-# Subtle top and bottom borders
-$penTbTop = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(90, 40, 70, 105), 1)
+# Horizon emerald aura along the top where tabs connect
+$penTbTop = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(140, 9, 227, 111), 1.5)
 $gToolbar.DrawLine($penTbTop, 0, 0, $tbW, 0)
 $penTbTop.Dispose()
+
+# Soft horizon glow band
+$tbGlowPath = New-Object System.Drawing.Drawing2D.GraphicsPath
+$tbGlowPath.AddRectangle((New-Object System.Drawing.Rectangle(0, 0, $tbW, 12)))
+$tbGlowBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+    (New-Object System.Drawing.Point(0, 0)),
+    (New-Object System.Drawing.Point(0, 12)),
+    [System.Drawing.Color]::FromArgb(70, 9, 227, 111),
+    [System.Drawing.Color]::FromArgb(0, 0, 27, 62)
+)
+$gToolbar.FillPath($tbGlowBrush, $tbGlowPath)
+$tbGlowBrush.Dispose()
+$tbGlowPath.Dispose()
 
 $penTbBottom = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(40, 9, 227, 111), 1)
 $gToolbar.DrawLine($penTbBottom, 0, ($tbH - 1), $tbW, ($tbH - 1))
