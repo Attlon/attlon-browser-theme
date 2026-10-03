@@ -2119,10 +2119,17 @@ function renderShortcuts() {
     item.className = 'shortcut-item';
     item.dataset.index = index;
     item.setAttribute('draggable', 'true');
+    let isDraggingShortcut = false;
 
     item.addEventListener('dragstart', (e) => {
+      isDraggingShortcut = true;
       e.dataTransfer.setData('text/plain', String(index));
       e.dataTransfer.effectAllowed = 'move';
+      if (e.dataTransfer.setDragImage) {
+        try {
+          e.dataTransfer.setDragImage(item, item.offsetWidth / 2, item.offsetHeight / 2);
+        } catch (_) {}
+      }
       item.classList.add('dragging');
     });
 
@@ -2145,17 +2152,24 @@ function renderShortcuts() {
       userShortcuts.splice(index, 0, moved);
       saveShortcuts();
       renderShortcuts();
-      showToast('✓ Marcadores reordenados');
+      showToast('✓ Marcador reordenado');
     });
 
     item.addEventListener('dragend', () => {
       item.classList.remove('dragging');
       document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+      setTimeout(() => { isDraggingShortcut = false; }, 150);
     });
 
     const link = document.createElement('a');
     link.href = bm.url;
     link.target = targetAttr;
+    link.addEventListener('click', (e) => {
+      if (isDraggingShortcut) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
     link.style.display = 'flex';
     link.style.flexDirection = 'column';
     link.style.alignItems = 'center';
@@ -2179,6 +2193,9 @@ function renderShortcuts() {
     optBtn.className = 'shortcut-options-btn';
     optBtn.title = 'Más opciones';
     optBtn.innerHTML = '•••';
+    optBtn.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+    });
     optBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -2209,6 +2226,28 @@ function renderShortcuts() {
     </div>
     <span class="shortcut-label">Agregar acc...</span>
   `;
+
+  addBtn.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    addBtn.classList.add('drag-over');
+  });
+
+  addBtn.addEventListener('dragleave', () => {
+    addBtn.classList.remove('drag-over');
+  });
+
+  addBtn.addEventListener('drop', (e) => {
+    e.preventDefault();
+    addBtn.classList.remove('drag-over');
+    const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    if (isNaN(fromIndex) || fromIndex < 0 || fromIndex >= userShortcuts.length) return;
+    const moved = userShortcuts.splice(fromIndex, 1)[0];
+    userShortcuts.push(moved);
+    saveShortcuts();
+    renderShortcuts();
+    showToast('✓ Marcador movido al final');
+  });
 
   addBtn.addEventListener('click', () => {
     openShortcutModal(-1);

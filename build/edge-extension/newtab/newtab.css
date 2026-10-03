@@ -1180,17 +1180,30 @@ body.theme-microsoft-attlon {
   cursor: -webkit-grab;
 }
 
+.shortcut-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
 .shortcut-item.dragging {
   opacity: 0.35;
   transform: scale(0.92);
 }
 
-.shortcut-item.drag-over .shortcut-tile {
+.shortcut-item.drag-over .shortcut-tile,
+.shortcut-item.drag-over.add-shortcut-btn .shortcut-tile {
   outline: 2px dashed var(--attlon-green);
   outline-offset: 4px;
   border-color: var(--attlon-green);
   transform: scale(1.12);
   box-shadow: 0 0 20px rgba(9, 227, 111, 0.45);
+}
+
+.shortcut-tile img,
+.shortcut-tile svg,
+.shortcut-label {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .shortcut-tile {
