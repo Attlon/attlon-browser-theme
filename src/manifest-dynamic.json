@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Attlon Workspace & Dynamic Dashboard",
   "short_name": "Attlon",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoofb9tbdkmoVm5Cp5WDN2zG6AgbTnxgpTEFz/3alozxK/Unun7w7o3MViufUiCjZjG/loqPhTn6Lv7pz429fgQienG2NBE9YKeOab0P94x9r2YF4E66Rn2PNq+HJ5TLQSdkeXmJ463jSum9Rje+Yyep6aTh5DgPqLeVNMOxUQH3qNHdtPLb73h8OULdvfTuMRt9JqV8g/XdKzLE9mgWaAGROr35M9exQIQupSkzMxEn3ZDlEq50jEx+n7dG6eX1etAOMOkIGM/G3teAFo9FFvC/596VzDNfIUNpK9kYHdAaGak1/xCUvUJy0/GVaehtMP+n77v3QnKd/QlPe8F4FzwIDAQAB",
   "description": "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial.",
   "author": "Attlon Industrial Safety",

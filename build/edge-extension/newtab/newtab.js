@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsTickerSystem();
   initLocationDetection();
   initWidgetHideAndManageButtons();
+  initWidgetClickthroughs();
   initVersionAndUpdates();
   initDrawerNavigation();
   initSearchAndCopilot();
@@ -541,15 +542,18 @@ function closeWeatherModal() {
 }
 
 function initWeatherModal() {
-  const topWidget = document.getElementById('topWeatherWidget');
   const cityDropdownBtn = document.getElementById('weatherCityDropdownBtn');
   const closeBtn = document.getElementById('closeWeatherModalBtn');
   const cancelBtn = document.getElementById('cancelWeatherModalBtn');
   const form = document.getElementById('weatherModalForm');
   const overlay = document.getElementById('weatherModalOverlay');
 
-  if (topWidget) topWidget.addEventListener('click', openWeatherModal);
-  if (cityDropdownBtn) cityDropdownBtn.addEventListener('click', openWeatherModal);
+  if (cityDropdownBtn) {
+    cityDropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openWeatherModal();
+    });
+  }
   if (closeBtn) closeBtn.addEventListener('click', closeWeatherModal);
   if (cancelBtn) cancelBtn.addEventListener('click', closeWeatherModal);
 
@@ -1276,73 +1280,91 @@ const NEWS_DATA = [
     cat: 'pci',
     tag: 'PCI · Tecnifuego',
     tagClass: 'cat-pci',
-    title: 'Tecnifuego analiza las novedades en sistemas de rociadores automáticos y UNE-EN 12845:2020',
-    summary: 'Revisión técnica de caudales mínimos, densidades de diseño para almacenamiento en altura y cálculo hidráulico avanzado.',
+    title: 'Tecnifuego impulsa el marco técnico para Centrales Receptoras de Incendios (CRI) y telegestión',
+    summary: 'Presentación de directrices para la verificación remota de alarmas y coordinación digital con servicios de bomberos.',
     url: 'https://www.tecnifuego.org/',
-    time: 'Hace 1h'
+    time: 'Hoy · 10:30'
   },
   {
     cat: 'pci',
-    tag: 'BOE · Normativa',
+    tag: 'Normativa · Baterías & FV',
     tagClass: 'cat-normativa',
-    title: 'Guía técnica del RIPCI (RD 513/2017): Pautas de mantenimiento e inspecciones periódicas de instalaciones PCI',
-    summary: 'Exigencias de trazabilidad de mantenedores autorizados, actas trimestrales y ensayos hidrostáticos obligatorios.',
-    url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642',
+    title: 'APICI y Tecnifuego analizan los protocolos PCI en plantas fotovoltaicas y baterías de litio',
+    summary: 'Directrices técnicas de supresión de incendios por embalamiento térmico y sectorización en cubiertas industriales.',
+    url: 'https://www.tecnifuego.org/',
     time: 'Hace 2h'
   },
   {
-    cat: 'spain',
-    tag: 'España · Economía',
-    tagClass: 'cat-spain',
-    title: 'El tejido industrial español acelera la inversión en eficiencia hídrica, sostenibilidad y transición verde',
-    summary: 'Planes de modernización en polígonos industriales con depósitos de reserva contra incendios reutilizables.',
-    url: 'https://elpais.com/economia/',
-    time: 'Hace 2h'
+    cat: 'pci',
+    tag: 'Ministerio · RIPCI',
+    tagClass: 'cat-normativa',
+    title: 'Guía técnica del RIPCI (RD 513/2017): Nuevos criterios de inspección periódica de BIEs y rociadores',
+    summary: 'Exigencias de certificación acreditada por ENAC para mantenedores autorizados y actas digitales de revisión.',
+    url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642',
+    time: 'Hace 3h'
   },
   {
     cat: 'pci',
     tag: 'PCI · Cepreven',
     tagClass: 'cat-pci',
-    title: 'CEPREVEN publica nuevas directrices técnicas de protección contra incendios en grandes centros logísticos',
-    summary: 'Criterios de sectorización pasiva, barreras de humo y espumas de alta expansión en naves logísticas automatizadas.',
+    title: 'CEPREVEN publica la directriz R.T.4-ABA sobre reservas hídricas y grupos de presión en logística',
+    summary: 'Criterios de autonomía mínima de bombeo, redundancia diésel y dimensionamiento de depósitos para grandes centros.',
     url: 'https://www.cepreven.com/',
-    time: 'Hace 3h'
-  },
-  {
-    cat: 'spain',
-    tag: 'España · Actualidad',
-    tagClass: 'cat-spain',
-    title: 'Protección Civil y Emergencias 112 coordinan los planes territoriales de alerta temprana y seguridad ciudadana',
-    summary: 'Integración telemática de avisos de riesgo químico, industrial y planes de autoprotección municipal.',
-    url: 'https://www.rtve.es/noticias/',
-    time: 'Hace 4h'
+    time: 'Hace 5h'
   },
   {
     cat: 'pci',
-    tag: 'PCI · CTE DB-SI',
+    tag: 'CTE DB-SI · Vivienda',
     tagClass: 'cat-normativa',
-    title: 'Seguridad contra incendios en edificación: Criterios del Ministerio de Vivienda sobre evacuación y sectorización',
-    summary: 'Clarificación sobre longitudes máximas de evacuación (25m salida única / 50m alternativa) y resistencia EI de puertas.',
+    title: 'Ministerio de Vivienda actualiza criterios de evacuación y resistencia al fuego EI en edificación',
+    summary: 'Aclaraciones sobre longitudes máximas de evacuación (25m salida única / 50m alternativa) y puertas cortafuegos.',
     url: 'https://www.codigotecnico.org/DocumentosCTE/SeguridadEnCasoDeIncendio.html',
-    time: 'Hoy'
+    time: 'Ayer'
+  },
+  {
+    cat: 'spain',
+    tag: 'Protección Civil · 112',
+    tagClass: 'cat-spain',
+    title: 'Protección Civil consolida la red ES-Alert para emergencias industriales y autoprotección',
+    summary: 'Protocolos de confinamiento y aviso inmediato a la población en zonas limítrofes con polígonos químicos.',
+    url: 'https://www.proteccioncivil.es/',
+    time: 'Ayer'
   },
   {
     cat: 'pci',
     tag: 'Attlon · Cottés',
     tagClass: 'cat-pci',
-    title: 'Attlon optimiza el control térmico de humos y la compartimentación de naves con ingeniería prestacional',
-    summary: 'Simulaciones CFD avanzadas y exutorios de humos certificados según norma UNE-EN 12101-2 para naves de gran gálibo.',
+    title: 'Attlon optimiza el control de humos y la compartimentación de naves con simulación CFD avanzada',
+    summary: 'Ingeniería prestacional en exutorios certificados UNE-EN 12101-2 y barreras de contención térmica.',
     url: 'https://attlon.com/',
-    time: 'Hoy'
+    time: 'Esta semana'
+  },
+  {
+    cat: 'pci',
+    tag: 'Seguridad · INSST',
+    tagClass: 'cat-normativa',
+    title: 'INSST publica directrices de seguridad contra atmósferas explosivas (ATEX) en silos y tolvas',
+    summary: 'Medidas de prevención en manipulación de polvos orgánicos combustibles y venteo de deflagraciones.',
+    url: 'https://www.insst.es/',
+    time: 'Esta semana'
   },
   {
     cat: 'spain',
-    tag: 'España · Tecnología',
+    tag: 'España · Industria',
     tagClass: 'cat-spain',
-    title: 'España atrae inversiones estratégicas europeas en centros de datos seguros e inteligencia artificial aplicada',
-    summary: 'Auge de data centers con extinción por gas limpio (Novec/FM-200) y detección precoz por aspiración láser.',
-    url: 'https://www.elmundo.es/tecnologia.html',
-    time: 'Hoy'
+    title: 'El tejido industrial español acelera la inversión en eficiencia hídrica y sensorización PCI',
+    summary: 'Planes de modernización en polígonos industriales con monitorización IoT en tiempo real de presiones y reservas.',
+    url: 'https://elpais.com/economia/',
+    time: 'Esta semana'
+  },
+  {
+    cat: 'spain',
+    tag: 'AEMET & DGT · Tráfico',
+    tagClass: 'cat-spain',
+    title: 'AEMET y DGT coordinan avisos de emergencias meteorológicas y planes de contingencia logística',
+    summary: 'Activación de planes preventivos ante fenómenos meteorológicos adversos y accesos a corredores industriales.',
+    url: 'https://www.aemet.es/es/eltiempo/prediccion/avisos',
+    time: 'Reciente'
   }
 ];
 
@@ -1352,6 +1374,7 @@ function initNewsTickerSystem() {
 
   const topicTag = document.getElementById('newsTopicTag');
   const headlineLink = document.getElementById('newsHeadlineLink');
+  const headlineText = document.getElementById('newsHeadlineText');
   const summaryEl = document.getElementById('newsSummaryText');
   const timestamp = document.getElementById('newsTimestamp');
   const prevBtn = document.getElementById('newsPrevBtn');
@@ -1422,10 +1445,15 @@ function initNewsTickerSystem() {
       topicTag.className = `news-topic-tag ${item.tagClass || ''}`;
     }
 
-    if (headlineLink) {
+    if (headlineText) {
+      headlineText.textContent = item.title;
+    } else if (headlineLink) {
       headlineLink.textContent = item.title;
+    }
+
+    if (headlineLink) {
       headlineLink.href = item.url;
-      headlineLink.title = `${item.title} (Clic para leer)`;
+      headlineLink.title = `${item.title} (Clic para abrir y ampliar noticia completa)`;
     }
 
     if (summaryEl) {
@@ -1552,6 +1580,65 @@ function initWidgetHideAndManageButtons() {
       const settingsBtn = document.getElementById('settingsBtn');
       if (settingsBtn) settingsBtn.click();
       showToast('Selecciona los widgets que deseas activar en el panel.');
+    });
+  }
+}
+
+// ==========================================================================
+// 10.B NAVEGACIÓN Y ENLACES DIRECTOS EN WIDGETS (CLIC-THROUGH OFICIAL)
+// ==========================================================================
+
+function initWidgetClickthroughs() {
+  // 1. Clima en Barra Superior (redirige a la previsión oficial en MSN El Tiempo)
+  const topWeather = document.getElementById('topWeatherWidget');
+  if (topWeather) {
+    topWeather.style.cursor = 'pointer';
+    topWeather.title = 'Haz clic para ver el tiempo oficial en MSN El Tiempo';
+    topWeather.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = (currentWeatherConfig && currentWeatherConfig.msnUrl)
+        ? currentWeatherConfig.msnUrl
+        : 'https://www.msn.com/es-es/eltiempo';
+      window.open(url, '_blank');
+    });
+  }
+
+  // 2. Widget del Tiempo en el Dock (al pinchar en cualquier parte de la tarjeta)
+  const weatherCard = document.getElementById('widgetCardWeather');
+  if (weatherCard) {
+    weatherCard.style.cursor = 'pointer';
+    weatherCard.title = 'Clic para abrir MSN El Tiempo oficial (Usa ⌵ para cambiar ciudad)';
+    weatherCard.addEventListener('click', (e) => {
+      // Ignorar si el usuario interactúa con el botón de ciudad, refresco o cierre
+      if (e.target.closest('#weatherCityDropdownBtn') || e.target.closest('#weatherRefreshBtn') || e.target.closest('.widget-hide-btn')) {
+        return;
+      }
+      const url = (currentWeatherConfig && currentWeatherConfig.msnUrl)
+        ? currentWeatherConfig.msnUrl
+        : 'https://www.msn.com/es-es/eltiempo';
+      window.open(url, '_blank');
+    });
+  }
+
+  // 3. Widget de Calidad del Aire en el Dock (redirige a la web oficial europea de calidad del aire)
+  const airCard = document.getElementById('widgetCardAir');
+  if (airCard) {
+    airCard.style.cursor = 'pointer';
+    airCard.title = 'Clic para abrir el Índice Oficial Europeo de Calidad del Aire (EEA)';
+    airCard.addEventListener('click', (e) => {
+      if (e.target.closest('.widget-hide-btn')) return;
+      window.open('https://airindex.eea.europa.eu/', '_blank');
+    });
+  }
+
+  // 4. Widget de Divisas y Mercados en el Dock (redirige a MSN Dinero)
+  const currencyCard = document.getElementById('widgetCardCurrency');
+  if (currencyCard) {
+    currencyCard.style.cursor = 'pointer';
+    currencyCard.title = 'Clic para abrir cotizaciones oficiales en MSN Dinero';
+    currencyCard.addEventListener('click', (e) => {
+      if (e.target.closest('.widget-hide-btn')) return;
+      window.open('https://www.msn.com/es-es/dinero', '_blank');
     });
   }
 }
@@ -1873,12 +1960,12 @@ function initShortcutModalHandlers() {
 // ==========================================================================
 
 function initVersionAndUpdates() {
-  let currentVersion = '1.2.0';
+  let currentVersion = '1.4.0';
   if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getManifest) {
     try {
       currentVersion = chrome.runtime.getManifest().version;
     } catch {
-      currentVersion = '1.2.0';
+      currentVersion = '1.4.0';
     }
   }
 

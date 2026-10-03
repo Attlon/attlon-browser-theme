@@ -324,11 +324,16 @@
         </div>
       </div>
 
-      <!-- Titular Principal y Mini-Resumen Sintetizado (Sin ventana, texto directo) -->
-      <div class="news-ambient-body" id="newsTickerContent">
-        <a href="https://www.tecnifuego.org/" target="_blank" class="news-ambient-headline" id="newsHeadlineLink">Cargando novedades normativas y actualidad de España...</a>
-        <p class="news-ambient-summary" id="newsSummaryText">Resumen analítico sobre novedades técnicas y normativas de seguridad industrial.</p>
-      </div>
+      <!-- Titular Principal y Mini-Resumen Sintetizado (Sin ventana, texto directo y completamente clickeable) -->
+      <a href="https://www.tecnifuego.org/" target="_blank" rel="noopener noreferrer" class="news-ambient-clickwrap" id="newsHeadlineLink" title="Clic para abrir y ampliar la noticia completa">
+        <div class="news-ambient-body" id="newsTickerContent">
+          <span class="news-ambient-headline" id="newsHeadlineText">Cargando novedades normativas y actualidad de España...</span>
+          <span class="news-ambient-summary" id="newsSummaryText">Resumen analítico sobre novedades técnicas y normativas de seguridad industrial.</span>
+          <span class="news-ambient-action">
+            <span class="news-action-chip">Ampliar noticia ↗</span>
+          </span>
+        </div>
+      </a>
     </section>
 
     <!-- 5. Fila Modular de Widgets Compactos (Clima, Calidad del Aire, Divisas, Tareas, Hidráulica y Conversor) -->
@@ -498,7 +503,7 @@
       <div class="compact-widget-card" id="widgetCardConverter" data-widget-key="converter">
         <div class="widget-header">
           <span class="widget-title-static">
-            <span style="color:#09E36F;">📐</span> Conversor PCI
+            <span style="color:#09E36F;">📐</span> Conversor
           </span>
           <div class="widget-header-actions">
             <select id="pciConvModeSelect" class="pci-conv-mode-select" title="Modo de conversión">
