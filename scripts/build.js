@@ -110,13 +110,12 @@ const edgeThemeManifest = {
 };
 fs.writeFileSync(path.join(EDGE_THEME_DIR, 'manifest.json'), JSON.stringify(edgeThemeManifest, null, 2), 'utf8');
 
-// B) Manifiestos de Extensión Dinámica (con nueva pestaña + marcadores + tema visual integrado)
+// B) Manifiestos de Extensión Dinámica (con nueva pestaña + marcadores)
 const chromeExtManifest = {
   ...dynamicManifest,
   short_name: "Attlon",
   name: "Attlon Workspace & Dynamic Dashboard",
-  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial.",
-  theme: themeConfig.theme
+  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial."
 };
 delete chromeExtManifest.key; // Requerido por la tienda de Chrome
 fs.writeFileSync(path.join(CHROME_EXT_DIR, 'manifest.json'), JSON.stringify(chromeExtManifest, null, 2), 'utf8');
@@ -125,8 +124,7 @@ const edgeExtManifest = {
   ...dynamicManifest,
   short_name: "Attlon",
   name: "Attlon Workspace & Dynamic Dashboard for Edge",
-  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial.",
-  theme: themeConfig.theme
+  description: "Espacio corporativo de Attlon: fondo dinámico, buscador Copilot, noticias PCI y herramientas de seguridad industrial."
 };
 delete edgeExtManifest.key; // Requerido por Microsoft Partner Center
 fs.writeFileSync(path.join(EDGE_EXT_DIR, 'manifest.json'), JSON.stringify(edgeExtManifest, null, 2), 'utf8');

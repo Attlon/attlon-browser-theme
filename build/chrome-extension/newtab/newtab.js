@@ -1405,23 +1405,25 @@ async function detectUserLocation(userInitiated = false) {
   try {
     let detectedCity = '';
 
-    // Consulta Geográfica IP silenciosa y sin permisos
+    // Consulta Geográfica IP silenciosa y compatible con CORS
     try {
-      const ipRes = await fetch('https://ipapi.co/json/');
+      const ipRes = await fetch('https://ipwho.is/');
       if (ipRes.ok) {
         const ipData = await ipRes.json();
-        detectedCity = ipData.city || '';
+        if (ipData && ipData.success && ipData.city) {
+          detectedCity = ipData.city;
+        }
       }
-    } catch {
+    } catch {}
+
+    if (!detectedCity) {
       try {
         const altRes = await fetch('https://freeipapi.com/api/json');
         if (altRes.ok) {
           const altData = await altRes.json();
           detectedCity = altData.cityName || '';
         }
-      } catch {
-        // Fallback local
-      }
+      } catch {}
     }
 
     if (!detectedCity && !userInitiated) {
