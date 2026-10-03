@@ -8,6 +8,9 @@
   "homepage_url": "https://attlon.com/",
   "theme": {
     "images": {
+      "theme_frame": "assets/backgrounds/theme_frame.png",
+      "theme_frame_inactive": "assets/backgrounds/theme_frame_inactive.png",
+      "theme_toolbar": "assets/backgrounds/theme_toolbar.png",
       "theme_ntp_background": "assets/backgrounds/theme_ntp_background.jpg",
       "theme_ntp_attribution": "assets/backgrounds/theme_ntp_attribution.png"
     },

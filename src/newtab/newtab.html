@@ -299,32 +299,35 @@
       <!-- Los marcadores se renderizan dinámicamente desde newtab.js -->
     </div>
 
-    <!-- 4. Barra Dinámica de Noticias: España & Protección Contra Incendios (PCI) -->
-    <section class="news-ticker-container" id="newsTickerContainer">
-      <div class="news-ticker-badge">
-        <span class="news-live-dot"></span>
-        <span class="news-brand-text">PCI & ACTUALIDAD</span>
+    <!-- 4. Noticias & Actualidad PCI / España: Texto Flotante Sin Ventana con Mini-Resumen y Posición Dinámica -->
+    <section class="news-floating-ambient" id="newsTickerContainer" data-position="bottom-center">
+      <div class="news-ambient-top">
+        <div class="news-ambient-badge">
+          <span class="news-live-dot"></span>
+          <span class="news-topic-tag" id="newsTopicTag">PCI · Tecnifuego</span>
+          <span class="news-timestamp" id="newsTimestamp">En directo</span>
+        </div>
+
+        <!-- Filtros rápidos de categoría -->
+        <div class="news-category-filters" id="newsCategoryFilters">
+          <button class="news-cat-btn active" data-cat="all">Todas</button>
+          <button class="news-cat-btn" data-cat="pci">Protección PCI</button>
+          <button class="news-cat-btn" data-cat="spain">España</button>
+        </div>
+
+        <!-- Selector de posición en pantalla y controles -->
+        <div class="news-ambient-controls">
+          <button class="news-ctrl-btn news-pos-btn" id="newsPosBtn" title="Cambiar posición en pantalla (Centro, Izq, Der, Arriba)">⤢ <span id="newsPosLabel">Centro</span></button>
+          <button class="news-ctrl-btn" id="newsPrevBtn" title="Noticia anterior">‹</button>
+          <button class="news-ctrl-btn" id="newsPauseBtn" title="Pausar / Reanudar">⏸</button>
+          <button class="news-ctrl-btn" id="newsNextBtn" title="Siguiente noticia">›</button>
+        </div>
       </div>
 
-      <!-- Filtros por categoría -->
-      <div class="news-category-filters" id="newsCategoryFilters">
-        <button class="news-cat-btn active" data-cat="all">Todas</button>
-        <button class="news-cat-btn" data-cat="pci">Protección PCI</button>
-        <button class="news-cat-btn" data-cat="spain">España</button>
-      </div>
-
-      <!-- Ticker Activo -->
-      <div class="news-ticker-content" id="newsTickerContent">
-        <span class="news-topic-tag" id="newsTopicTag">PCI · Tecnifuego</span>
-        <a href="https://www.tecnifuego.org/" target="_blank" class="news-headline-link" id="newsHeadlineLink">Cargando novedades normativas y actualidad de España...</a>
-        <span class="news-timestamp" id="newsTimestamp">En directo</span>
-      </div>
-
-      <!-- Controles del carrusel de noticias -->
-      <div class="news-ticker-controls">
-        <button class="news-ctrl-btn" id="newsPrevBtn" title="Noticia anterior">‹</button>
-        <button class="news-ctrl-btn" id="newsPauseBtn" title="Pausar / Reanudar">⏸</button>
-        <button class="news-ctrl-btn" id="newsNextBtn" title="Siguiente noticia">›</button>
+      <!-- Titular Principal y Mini-Resumen Sintetizado (Sin ventana, texto directo) -->
+      <div class="news-ambient-body" id="newsTickerContent">
+        <a href="https://www.tecnifuego.org/" target="_blank" class="news-ambient-headline" id="newsHeadlineLink">Cargando novedades normativas y actualidad de España...</a>
+        <p class="news-ambient-summary" id="newsSummaryText">Resumen analítico sobre novedades técnicas y normativas de seguridad industrial.</p>
       </div>
     </section>
 
@@ -501,6 +504,10 @@
             <select id="pciConvModeSelect" class="pci-conv-mode-select" title="Modo de conversión">
               <option value="press" selected>Presión</option>
               <option value="flow">Caudal</option>
+              <option value="temp">Temperatura</option>
+              <option value="density">Densidad PCI</option>
+              <option value="length">Longitud / Dist.</option>
+              <option value="power">Potencia / Calor</option>
               <option value="pipe">Tubería</option>
             </select>
             <button class="widget-hide-btn" data-widget-key="converter" title="Ocultar widget">✕</button>
@@ -541,6 +548,74 @@
             </div>
           </div>
 
+          <!-- Modo Temperatura con Código de Bulbos de Rociadores -->
+          <div class="pci-conv-panel" id="pciPanelTemp" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciTempValInput" value="68" step="1" class="pci-conv-input">
+              <select id="pciTempUnitSelect" class="pci-conv-unit">
+                <option value="c" selected>°C</option>
+                <option value="f">°F</option>
+                <option value="k">K</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciTempResults">
+              <span class="conv-tag">154.4 °F</span>
+              <span class="conv-tag">341.2 K</span>
+              <span class="conv-tag conv-highlight" id="pciTempBulbBadge">🔴 Bulbo Rojo estándar</span>
+            </div>
+          </div>
+
+          <!-- Modo Densidad de Descarga PCI (UNE-EN 12845 / NFPA 13) -->
+          <div class="pci-conv-panel" id="pciPanelDensity" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciDensityValInput" value="5.0" min="0.1" step="0.5" class="pci-conv-input">
+              <select id="pciDensityUnitSelect" class="pci-conv-unit">
+                <option value="mmmin" selected>mm/min</option>
+                <option value="gpmft2">gpm/ft²</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciDensityResults">
+              <span class="conv-tag">0.123 gpm/ft²</span>
+              <span class="conv-tag conv-highlight">Riesgo Ordinario (RO)</span>
+            </div>
+          </div>
+
+          <!-- Modo Longitud / Recorrido de Evacuación y Extintores -->
+          <div class="pci-conv-panel" id="pciPanelLength" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciLengthValInput" value="15" min="0.1" step="1" class="pci-conv-input">
+              <select id="pciLengthUnitSelect" class="pci-conv-unit">
+                <option value="m" selected>m</option>
+                <option value="ft">ft (pies)</option>
+                <option value="in">in (pulg.)</option>
+                <option value="mm">mm</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciLengthResults">
+              <span class="conv-tag">49.2 ft</span>
+              <span class="conv-tag">590.6 in</span>
+              <span class="conv-tag conv-highlight">Máx. Extintor (15m)</span>
+            </div>
+          </div>
+
+          <!-- Modo Potencia / Carga Térmica de Fuego (kW, MW, BTU/h, kcal/h) -->
+          <div class="pci-conv-panel" id="pciPanelPower" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciPowerValInput" value="1000" min="1" step="50" class="pci-conv-input">
+              <select id="pciPowerUnitSelect" class="pci-conv-unit">
+                <option value="kw" selected>kW</option>
+                <option value="mw">MW</option>
+                <option value="btuh">BTU/h</option>
+                <option value="kcalh">kcal/h</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciPowerResults">
+              <span class="conv-tag">1.00 MW</span>
+              <span class="conv-tag">3.41M BTU/h</span>
+              <span class="conv-tag">860k kcal/h</span>
+            </div>
+          </div>
+
           <!-- Modo Tubería -->
           <div class="pci-conv-panel" id="pciPanelPipe" style="display:none;">
             <div class="pci-conv-input-row">
@@ -564,7 +639,7 @@
           </div>
         </div>
         <div class="compact-card-footer">
-          <span class="compact-safe-note">UNE-EN 10255</span>
+          <span class="compact-safe-note" id="pciConvFooterNote">UNE-EN 12845 · RIPCI</span>
         </div>
       </div>
 
@@ -802,6 +877,14 @@
           <span class="bg-choice-label">Azul Puro</span>
         </div>
 
+        <!-- Opción D: Blueprint Técnico de Ingeniería PCI -->
+        <div class="bg-choice-card" data-bg-type="blueprint" id="bgChoiceBlueprint">
+          <div class="bg-thumb-preview blueprint-thumb">
+            <span>📐 CAD</span>
+          </div>
+          <span class="bg-choice-label">Plano Técnico</span>
+        </div>
+
         <!-- Opción D: Subir Imagen Propia -->
         <div class="bg-choice-card" data-bg-type="custom" id="bgChoiceCustom">
           <div class="bg-thumb-preview upload-thumb">
@@ -848,6 +931,22 @@
             <input type="checkbox" id="toggleNewsTicker" checked>
             <span class="slider"></span>
           </label>
+        </div>
+      </div>
+
+      <!-- Posición de Noticias en Pantalla -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Posición de Noticias</span>
+          <span class="setting-desc">Ubicación del texto ambiental en pantalla</span>
+        </div>
+        <div class="setting-ctrl">
+          <select id="newsPositionSelect" class="settings-select" style="background:rgba(0,19,43,0.6); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:4px 8px; font-size:0.75rem;">
+            <option value="bottom-center" selected>Abajo Centro</option>
+            <option value="bottom-left">Abajo Izquierda</option>
+            <option value="bottom-right">Abajo Derecha</option>
+            <option value="top-bar">Superior</option>
+          </select>
         </div>
       </div>
 

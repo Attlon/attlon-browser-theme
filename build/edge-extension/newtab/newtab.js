@@ -341,6 +341,14 @@ function applyWallpaper(bgType) {
       ? 'linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%)'
       : 'linear-gradient(135deg, #001B3E 0%, #000D1D 100%)';
     customBg.classList.add('active');
+  } else if (bgType === 'blueprint') {
+    if (bgVideo) {
+      bgVideo.pause();
+      bgVideo.style.display = 'none';
+    }
+    customBg.style.backgroundImage = 'radial-gradient(circle at 50% 50%, #001b3e 0%, #000917 100%), linear-gradient(rgba(9, 227, 111, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(9, 227, 111, 0.08) 1px, transparent 1px)';
+    customBg.style.backgroundSize = '100% 100%, 36px 36px, 36px 36px';
+    customBg.classList.add('active');
   } else if (bgType === 'custom') {
     const savedData = localStorage.getItem('attlon_custom_bg_data');
     if (savedData) {
@@ -807,15 +815,34 @@ function initTechnicalConverter() {
   const modeSelect = document.getElementById('pciConvModeSelect');
   const panelPress = document.getElementById('pciPanelPress');
   const panelFlow = document.getElementById('pciPanelFlow');
+  const panelTemp = document.getElementById('pciPanelTemp');
+  const panelDensity = document.getElementById('pciPanelDensity');
+  const panelLength = document.getElementById('pciPanelLength');
+  const panelPower = document.getElementById('pciPanelPower');
   const panelPipe = document.getElementById('pciPanelPipe');
+  const footerNote = document.getElementById('pciConvFooterNote');
 
   if (!modeSelect) return;
 
+  const panels = {
+    press: { panel: panelPress, note: 'UNE-EN 12845 · DIN 2448' },
+    flow: { panel: panelFlow, note: 'UNE-EN 12845 · NFPA 13/20' },
+    temp: { panel: panelTemp, note: 'Rociadores UNE-EN 12259-1' },
+    density: { panel: panelDensity, note: 'Diseño Rociadores UNE-EN 12845' },
+    length: { panel: panelLength, note: 'RIPCI & CTE DB-SI Coberturas' },
+    power: { panel: panelPower, note: 'Carga de Fuego Eurocódigos' },
+    pipe: { panel: panelPipe, note: 'UNE-EN 10255 Serie Media' }
+  };
+
   modeSelect.addEventListener('change', () => {
     const mode = modeSelect.value;
-    if (panelPress) panelPress.style.display = mode === 'press' ? 'block' : 'none';
-    if (panelFlow) panelFlow.style.display = mode === 'flow' ? 'block' : 'none';
-    if (panelPipe) panelPipe.style.display = mode === 'pipe' ? 'block' : 'none';
+    Object.keys(panels).forEach((k) => {
+      const p = panels[k];
+      if (p.panel) p.panel.style.display = k === mode ? 'block' : 'none';
+    });
+    if (footerNote && panels[mode]) {
+      footerNote.textContent = panels[mode].note;
+    }
   });
 
   // A. Presión (bar, psi, mca, kPa)
@@ -887,7 +914,169 @@ function initTechnicalConverter() {
     updateFlow();
   }
 
-  // C. Tuberías (UNE-EN 10255)
+  // C. Temperatura & Código de Bulbos Sprinkler
+  const tempInput = document.getElementById('pciTempValInput');
+  const tempUnit = document.getElementById('pciTempUnitSelect');
+  const tempResults = document.getElementById('pciTempResults');
+
+  function updateTemp() {
+    if (!tempInput || !tempUnit || !tempResults) return;
+    const val = parseFloat(tempInput.value);
+    if (isNaN(val)) return;
+
+    let degC = val;
+    const u = tempUnit.value;
+    if (u === 'f') degC = (val - 32) / 1.8;
+    else if (u === 'k') degC = val - 273.15;
+
+    const degF = (degC * 1.8 + 32).toFixed(1);
+    const kelvin = (degC + 273.15).toFixed(1);
+    const cDisp = degC.toFixed(1);
+
+    let bulbText = '🔴 Rojo (68°C Estándar)';
+    if (degC <= 60) bulbText = '🟠 Naranja (57°C)';
+    else if (degC <= 74) bulbText = '🔴 Rojo (68°C Estándar)';
+    else if (degC <= 86) bulbText = '🟡 Amarillo (79°C)';
+    else if (degC <= 115) bulbText = '🟢 Verde (93°C)';
+    else if (degC <= 160) bulbText = '🔵 Azul (141°C)';
+    else if (degC <= 220) bulbText = '🟣 Malva (182°C)';
+    else bulbText = '⚫ Negro (≥227°C)';
+
+    let html = '';
+    if (u !== 'c') html += `<span class="conv-tag">${cDisp} °C</span>`;
+    if (u !== 'f') html += `<span class="conv-tag">${degF} °F</span>`;
+    if (u !== 'k') html += `<span class="conv-tag">${kelvin} K</span>`;
+    html += `<span class="conv-tag conv-highlight">${bulbText}</span>`;
+
+    tempResults.innerHTML = html;
+  }
+
+  if (tempInput && tempUnit) {
+    tempInput.addEventListener('input', updateTemp);
+    tempUnit.addEventListener('change', updateTemp);
+    updateTemp();
+  }
+
+  // D. Densidad de Descarga PCI (UNE-EN 12845 / NFPA 13)
+  const densityInput = document.getElementById('pciDensityValInput');
+  const densityUnit = document.getElementById('pciDensityUnitSelect');
+  const densityResults = document.getElementById('pciDensityResults');
+
+  function updateDensity() {
+    if (!densityInput || !densityUnit || !densityResults) return;
+    const val = parseFloat(densityInput.value);
+    if (isNaN(val)) return;
+
+    let mmmin = val;
+    const u = densityUnit.value;
+    if (u === 'gpmft2') mmmin = val / 0.02454;
+
+    const gpmft2 = (mmmin * 0.02454).toFixed(3);
+    const mmDisp = mmmin.toFixed(2);
+
+    let classification = 'Riesgo Ordinario (RO)';
+    if (mmmin <= 2.5) classification = 'Riesgo Ligero (RL - 2.25 mm/min)';
+    else if (mmmin <= 5.5) classification = 'Riesgo Ordinario (RO - 5 mm/min)';
+    else if (mmmin <= 12.5) classification = 'Riesgo Extra Proceso (REP)';
+    else classification = 'Riesgo Extra Almacenamiento (REA)';
+
+    let html = '';
+    if (u !== 'mmmin') html += `<span class="conv-tag">${mmDisp} mm/min</span>`;
+    if (u !== 'gpmft2') html += `<span class="conv-tag">${gpmft2} gpm/ft²</span>`;
+    html += `<span class="conv-tag conv-highlight">${classification}</span>`;
+
+    densityResults.innerHTML = html;
+  }
+
+  if (densityInput && densityUnit) {
+    densityInput.addEventListener('input', updateDensity);
+    densityUnit.addEventListener('change', updateDensity);
+    updateDensity();
+  }
+
+  // E. Longitud / Distancias de Seguridad PCI
+  const lengthInput = document.getElementById('pciLengthValInput');
+  const lengthUnit = document.getElementById('pciLengthUnitSelect');
+  const lengthResults = document.getElementById('pciLengthResults');
+
+  function updateLength() {
+    if (!lengthInput || !lengthUnit || !lengthResults) return;
+    const val = parseFloat(lengthInput.value);
+    if (isNaN(val)) return;
+
+    let meters = val;
+    const u = lengthUnit.value;
+    if (u === 'ft') meters = val * 0.3048;
+    else if (u === 'in') meters = val * 0.0254;
+    else if (u === 'mm') meters = val / 1000;
+
+    const ft = (meters * 3.28084).toFixed(1);
+    const inches = (meters * 39.3701).toFixed(0);
+    const mm = (meters * 1000).toFixed(0);
+    const mDisp = meters.toFixed(2);
+
+    let note = 'Radio de acción';
+    if (meters <= 15.01) note = '✓ Máx. Extintor RIPCI (15m)';
+    else if (meters <= 25.01) note = '✓ Cobertura BIE 25mm (25m)';
+    else if (meters <= 50.01) note = '✓ Evacuación Salidas Alt. (50m)';
+    else note = '⚠ Excede radio simple';
+
+    let html = '';
+    if (u !== 'm') html += `<span class="conv-tag">${mDisp} m</span>`;
+    if (u !== 'ft') html += `<span class="conv-tag">${ft} ft</span>`;
+    if (u !== 'in') html += `<span class="conv-tag">${inches} in</span>`;
+    if (u !== 'mm' && meters < 5) html += `<span class="conv-tag">${mm} mm</span>`;
+    html += `<span class="conv-tag conv-highlight">${note}</span>`;
+
+    lengthResults.innerHTML = html;
+  }
+
+  if (lengthInput && lengthUnit) {
+    lengthInput.addEventListener('input', updateLength);
+    lengthUnit.addEventListener('change', updateLength);
+    updateLength();
+  }
+
+  // F. Potencia Calorífica / Carga de Fuego
+  const powerInput = document.getElementById('pciPowerValInput');
+  const powerUnit = document.getElementById('pciPowerUnitSelect');
+  const powerResults = document.getElementById('pciPowerResults');
+
+  function updatePower() {
+    if (!powerInput || !powerUnit || !powerResults) return;
+    const val = parseFloat(powerInput.value);
+    if (isNaN(val)) return;
+
+    let kw = val;
+    const u = powerUnit.value;
+    if (u === 'mw') kw = val * 1000;
+    else if (u === 'btuh') kw = val / 3412.14;
+    else if (u === 'kcalh') kw = val / 859.85;
+
+    const mw = (kw / 1000).toFixed(2);
+    const btuh = Math.round(kw * 3412.14);
+    const kcalh = Math.round(kw * 859.85);
+    const kwDisp = kw.toFixed(1);
+
+    const btuStr = btuh > 1000000 ? (btuh / 1000000).toFixed(2) + 'M BTU/h' : (btuh / 1000).toFixed(0) + 'k BTU/h';
+    const kcalStr = kcalh > 1000000 ? (kcalh / 1000000).toFixed(2) + 'M kcal/h' : (kcalh / 1000).toFixed(0) + 'k kcal/h';
+
+    let html = '';
+    if (u !== 'kw') html += `<span class="conv-tag">${kwDisp} kW</span>`;
+    if (u !== 'mw') html += `<span class="conv-tag">${mw} MW</span>`;
+    if (u !== 'btuh') html += `<span class="conv-tag">${btuStr}</span>`;
+    if (u !== 'kcalh') html += `<span class="conv-tag">${kcalStr}</span>`;
+
+    powerResults.innerHTML = html;
+  }
+
+  if (powerInput && powerUnit) {
+    powerInput.addEventListener('input', updatePower);
+    powerUnit.addEventListener('change', updatePower);
+    updatePower();
+  }
+
+  // G. Tuberías (UNE-EN 10255)
   const pipeSelect = document.getElementById('pciPipeSelect');
   const pipeDetails = document.getElementById('pciPipeDetails');
 
@@ -1088,6 +1277,7 @@ const NEWS_DATA = [
     tag: 'PCI · Tecnifuego',
     tagClass: 'cat-pci',
     title: 'Tecnifuego analiza las novedades en sistemas de rociadores automáticos y UNE-EN 12845:2020',
+    summary: 'Revisión técnica de caudales mínimos, densidades de diseño para almacenamiento en altura y cálculo hidráulico avanzado.',
     url: 'https://www.tecnifuego.org/',
     time: 'Hace 1h'
   },
@@ -1096,6 +1286,7 @@ const NEWS_DATA = [
     tag: 'BOE · Normativa',
     tagClass: 'cat-normativa',
     title: 'Guía técnica del RIPCI (RD 513/2017): Pautas de mantenimiento e inspecciones periódicas de instalaciones PCI',
+    summary: 'Exigencias de trazabilidad de mantenedores autorizados, actas trimestrales y ensayos hidrostáticos obligatorios.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642',
     time: 'Hace 2h'
   },
@@ -1104,6 +1295,7 @@ const NEWS_DATA = [
     tag: 'España · Economía',
     tagClass: 'cat-spain',
     title: 'El tejido industrial español acelera la inversión en eficiencia hídrica, sostenibilidad y transición verde',
+    summary: 'Planes de modernización en polígonos industriales con depósitos de reserva contra incendios reutilizables.',
     url: 'https://elpais.com/economia/',
     time: 'Hace 2h'
   },
@@ -1112,6 +1304,7 @@ const NEWS_DATA = [
     tag: 'PCI · Cepreven',
     tagClass: 'cat-pci',
     title: 'CEPREVEN publica nuevas directrices técnicas de protección contra incendios en grandes centros logísticos',
+    summary: 'Criterios de sectorización pasiva, barreras de humo y espumas de alta expansión en naves logísticas automatizadas.',
     url: 'https://www.cepreven.com/',
     time: 'Hace 3h'
   },
@@ -1120,6 +1313,7 @@ const NEWS_DATA = [
     tag: 'España · Actualidad',
     tagClass: 'cat-spain',
     title: 'Protección Civil y Emergencias 112 coordinan los planes territoriales de alerta temprana y seguridad ciudadana',
+    summary: 'Integración telemática de avisos de riesgo químico, industrial y planes de autoprotección municipal.',
     url: 'https://www.rtve.es/noticias/',
     time: 'Hace 4h'
   },
@@ -1128,6 +1322,7 @@ const NEWS_DATA = [
     tag: 'PCI · CTE DB-SI',
     tagClass: 'cat-normativa',
     title: 'Seguridad contra incendios en edificación: Criterios del Ministerio de Vivienda sobre evacuación y sectorización',
+    summary: 'Clarificación sobre longitudes máximas de evacuación (25m salida única / 50m alternativa) y resistencia EI de puertas.',
     url: 'https://www.codigotecnico.org/DocumentosCTE/SeguridadEnCasoDeIncendio.html',
     time: 'Hoy'
   },
@@ -1136,6 +1331,7 @@ const NEWS_DATA = [
     tag: 'Attlon · Cottés',
     tagClass: 'cat-pci',
     title: 'Attlon optimiza el control térmico de humos y la compartimentación de naves con ingeniería prestacional',
+    summary: 'Simulaciones CFD avanzadas y exutorios de humos certificados según norma UNE-EN 12101-2 para naves de gran gálibo.',
     url: 'https://attlon.com/',
     time: 'Hoy'
   },
@@ -1144,6 +1340,7 @@ const NEWS_DATA = [
     tag: 'España · Tecnología',
     tagClass: 'cat-spain',
     title: 'España atrae inversiones estratégicas europeas en centros de datos seguros e inteligencia artificial aplicada',
+    summary: 'Auge de data centers con extinción por gas limpio (Novec/FM-200) y detección precoz por aspiración láser.',
     url: 'https://www.elmundo.es/tecnologia.html',
     time: 'Hoy'
   }
@@ -1155,16 +1352,57 @@ function initNewsTickerSystem() {
 
   const topicTag = document.getElementById('newsTopicTag');
   const headlineLink = document.getElementById('newsHeadlineLink');
+  const summaryEl = document.getElementById('newsSummaryText');
   const timestamp = document.getElementById('newsTimestamp');
   const prevBtn = document.getElementById('newsPrevBtn');
   const nextBtn = document.getElementById('newsNextBtn');
   const pauseBtn = document.getElementById('newsPauseBtn');
+  const posBtn = document.getElementById('newsPosBtn');
+  const posLabel = document.getElementById('newsPosLabel');
+  const drawerPosSelect = document.getElementById('newsPositionSelect');
   const catFilterBtns = document.querySelectorAll('.news-cat-btn');
 
   let currentCategory = 'all';
   let currentIndex = 0;
   let isPaused = false;
   let tickerInterval = null;
+
+  const POSITIONS = ['bottom-center', 'bottom-left', 'bottom-right', 'top-bar'];
+  const POS_LABELS = {
+    'bottom-center': 'Centro',
+    'bottom-left': 'Izq.',
+    'bottom-right': 'Der.',
+    'top-bar': 'Arriba'
+  };
+
+  function setNewsPosition(pos) {
+    if (!POSITIONS.includes(pos)) pos = 'bottom-center';
+    container.setAttribute('data-position', pos);
+    if (posLabel) posLabel.textContent = POS_LABELS[pos] || 'Centro';
+    if (drawerPosSelect) drawerPosSelect.value = pos;
+    localStorage.setItem('attlon_news_position', pos);
+  }
+
+  // Cargar posición guardada
+  const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
+  setNewsPosition(savedPos);
+
+  if (posBtn) {
+    posBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currentPos = container.getAttribute('data-position') || 'bottom-center';
+      const curIdx = POSITIONS.indexOf(currentPos);
+      const nextPos = POSITIONS[(curIdx + 1) % POSITIONS.length];
+      setNewsPosition(nextPos);
+      showToast(`Noticias ubicadas: ${POS_LABELS[nextPos]}`);
+    });
+  }
+
+  if (drawerPosSelect) {
+    drawerPosSelect.addEventListener('change', () => {
+      setNewsPosition(drawerPosSelect.value);
+    });
+  }
 
   function getFilteredItems() {
     if (currentCategory === 'all') return NEWS_DATA;
@@ -1188,6 +1426,10 @@ function initNewsTickerSystem() {
       headlineLink.textContent = item.title;
       headlineLink.href = item.url;
       headlineLink.title = `${item.title} (Clic para leer)`;
+    }
+
+    if (summaryEl) {
+      summaryEl.textContent = item.summary || '';
     }
 
     if (timestamp) {

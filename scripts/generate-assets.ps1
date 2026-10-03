@@ -128,13 +128,16 @@ foreach ($s in $iconSizes) {
     Write-Host "Created $iconPath"
 }
 
-# 2. Render Frame Background (theme_frame.png)
-Write-Host "Rendering Frame Backgrounds..."
-$frameW = 100
-$frameH = 120
+# 2. Render Frame Background (theme_frame.png) - Inspired Architectural CAD Engineering
+Write-Host "Rendering High-Definition Inspired Frame Background (1920x140)..."
+$frameW = 1920
+$frameH = 140
 $bmpFrame = New-Object System.Drawing.Bitmap($frameW, $frameH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $gFrame = [System.Drawing.Graphics]::FromImage($bmpFrame)
-$cFrameTop = [System.Drawing.Color]::FromArgb(255, 0, 14, 32)
+$gFrame.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+
+# Corporate deep navy gradient
+$cFrameTop = [System.Drawing.Color]::FromArgb(255, 0, 11, 26)
 $cFrameBottom = [System.Drawing.Color]::FromArgb(255, 0, 19, 43)
 $gradBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
     (New-Object System.Drawing.Point(0, 0)),
@@ -145,8 +148,36 @@ $gradBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 $gFrame.FillRectangle($gradBrush, 0, 0, $frameW, $frameH)
 $gradBrush.Dispose()
 
-# Subtle architectural 1px line at y=119
-$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(80, 30, 53, 80), 1)
+# Inspired architectural grid lines (engineering blueprint aesthetic)
+$gridPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(18, 9, 227, 111), 1)
+$subGridPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(12, 160, 178, 198), 1)
+
+# Horizontal lines
+for ($y = 20; $y -lt $frameH; $y += 20) {
+    $p = if ($y % 40 -eq 0) { $gridPen } else { $subGridPen }
+    $gFrame.DrawLine($p, 0, $y, $frameW, $y)
+}
+
+# Vertical & Isometric guide lines across header
+for ($x = 40; $x -lt $frameW; $x += 40) {
+    $p = if ($x % 120 -eq 0) { $gridPen } else { $subGridPen }
+    $gFrame.DrawLine($p, $x, 0, $x, $frameH)
+}
+
+# Technical crosshair nodes and subtle engineering coordinates on right side
+$nodePen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(50, 9, 227, 111), 1)
+for ($x = 1200; $x -lt $frameW; $x += 120) {
+    for ($y = 40; $y -lt $frameH; $y += 40) {
+        $gFrame.DrawLine($nodePen, ($x - 4), $y, ($x + 4), $y)
+        $gFrame.DrawLine($nodePen, $x, ($y - 4), $x, ($y + 4))
+    }
+}
+$nodePen.Dispose()
+$gridPen.Dispose()
+$subGridPen.Dispose()
+
+# Subtle bottom border line with emerald accent
+$penLine = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(120, 9, 227, 111), 1)
 $gFrame.DrawLine($penLine, 0, ($frameH - 1), $frameW, ($frameH - 1))
 $penLine.Dispose()
 $gFrame.Dispose()
@@ -154,9 +185,10 @@ $bmpFrame.Save((Join-Path $bgDir "theme_frame.png"), [System.Drawing.Imaging.Ima
 $bmpFrame.Dispose()
 
 # 3. Render Inactive Frame Background (theme_frame_inactive.png)
+Write-Host "Rendering Inactive Frame Background (1920x140)..."
 $bmpFrameIn = New-Object System.Drawing.Bitmap($frameW, $frameH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $gFrameIn = [System.Drawing.Graphics]::FromImage($bmpFrameIn)
-$cInTop = [System.Drawing.Color]::FromArgb(255, 0, 8, 20)
+$cInTop = [System.Drawing.Color]::FromArgb(255, 0, 7, 18)
 $cInBottom = [System.Drawing.Color]::FromArgb(255, 0, 13, 29)
 $gradIn = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
     (New-Object System.Drawing.Point(0, 0)),
@@ -166,22 +198,49 @@ $gradIn = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
 )
 $gFrameIn.FillRectangle($gradIn, 0, 0, $frameW, $frameH)
 $gradIn.Dispose()
+
+$subGridPenIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(8, 160, 178, 198), 1)
+for ($y = 20; $y -lt $frameH; $y += 20) {
+    $gFrameIn.DrawLine($subGridPenIn, 0, $y, $frameW, $y)
+}
+for ($x = 60; $x -lt $frameW; $x += 60) {
+    $gFrameIn.DrawLine($subGridPenIn, $x, 0, $x, $frameH)
+}
+$subGridPenIn.Dispose()
+
+$penLineIn = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(60, 30, 53, 80), 1)
+$gFrameIn.DrawLine($penLineIn, 0, ($frameH - 1), $frameW, ($frameH - 1))
+$penLineIn.Dispose()
 $gFrameIn.Dispose()
 $bmpFrameIn.Save((Join-Path $bgDir "theme_frame_inactive.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $bmpFrameIn.Dispose()
 
-# 4. Render Toolbar Background (theme_toolbar.png)
-$bmpToolbar = New-Object System.Drawing.Bitmap($frameW, $frameH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+# 4. Render Toolbar Background (theme_toolbar.png) - 1920x90
+Write-Host "Rendering Toolbar Background (1920x90)..."
+$tbW = 1920
+$tbH = 90
+$bmpToolbar = New-Object System.Drawing.Bitmap($tbW, $tbH, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $gToolbar = [System.Drawing.Graphics]::FromImage($bmpToolbar)
-$cToolbar = [System.Drawing.Color]::FromArgb(255, 0, 27, 62)
-$brushTb = New-Object System.Drawing.SolidBrush($cToolbar)
-$gToolbar.FillRectangle($brushTb, 0, 0, $frameW, $frameH)
-$brushTb.Dispose()
+$cToolbarTop = [System.Drawing.Color]::FromArgb(255, 0, 24, 55)
+$cToolbarBottom = [System.Drawing.Color]::FromArgb(255, 0, 27, 62)
+$gradTb = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+    (New-Object System.Drawing.Point(0, 0)),
+    (New-Object System.Drawing.Point(0, $tbH)),
+    $cToolbarTop,
+    $cToolbarBottom
+)
+$gToolbar.FillRectangle($gradTb, 0, 0, $tbW, $tbH)
+$gradTb.Dispose()
 
-# Subtle architectural 1px top highlight
-$penTb = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(120, 30, 53, 80), 1)
-$gToolbar.DrawLine($penTb, 0, 0, $frameW, 0)
-$penTb.Dispose()
+# Subtle top and bottom borders
+$penTbTop = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(90, 40, 70, 105), 1)
+$gToolbar.DrawLine($penTbTop, 0, 0, $tbW, 0)
+$penTbTop.Dispose()
+
+$penTbBottom = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(40, 9, 227, 111), 1)
+$gToolbar.DrawLine($penTbBottom, 0, ($tbH - 1), $tbW, ($tbH - 1))
+$penTbBottom.Dispose()
+
 $gToolbar.Dispose()
 $bmpToolbar.Save((Join-Path $bgDir "theme_toolbar.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $bmpToolbar.Dispose()
