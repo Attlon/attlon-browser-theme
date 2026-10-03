@@ -1175,6 +1175,24 @@ body.theme-microsoft-attlon {
   transform: translateY(-4px);
 }
 
+.shortcut-item[draggable="true"] {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+.shortcut-item.dragging {
+  opacity: 0.35;
+  transform: scale(0.92);
+}
+
+.shortcut-item.drag-over .shortcut-tile {
+  outline: 2px dashed var(--attlon-green);
+  outline-offset: 4px;
+  border-color: var(--attlon-green);
+  transform: scale(1.12);
+  box-shadow: 0 0 20px rgba(9, 227, 111, 0.45);
+}
+
 .shortcut-tile {
   position: relative;
   width: 54px;
@@ -1520,6 +1538,36 @@ body.theme-light .news-ctrl-btn:hover {
   color: #047857;
 }
 
+.news-drag-handle {
+  cursor: grab !important;
+  cursor: -webkit-grab !important;
+  user-select: none;
+  touch-action: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+}
+
+.news-drag-handle:active {
+  cursor: grabbing !important;
+  cursor: -webkit-grabbing !important;
+}
+
+.news-floating-ambient.dragging {
+  opacity: 0.8;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(9, 227, 111, 0.45) !important;
+  border-color: var(--attlon-green) !important;
+  transform: scale(0.99);
+}
+
+.news-floating-ambient.is-custom-floating {
+  position: fixed !important;
+  z-index: 800;
+  margin: 0 !important;
+  max-width: 820px;
+}
+
 /* Envoltorio clickeable del texto de noticias (Titular + Mini-resumen + Chip) */
 .news-ambient-clickwrap {
   display: block;
@@ -1683,6 +1731,53 @@ body.theme-light .news-ambient-clickwrap:hover .news-action-chip {
   border-color: var(--widget-glass-border-accent);
   transform: translateY(-2px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.compact-widget-card[draggable="true"] {
+  cursor: default;
+}
+
+.compact-widget-card.dragging {
+  opacity: 0.35;
+  transform: scale(0.95);
+  box-shadow: 0 0 25px rgba(9, 227, 111, 0.45);
+  border-color: var(--attlon-green) !important;
+}
+
+.compact-widget-card.drag-over {
+  outline: 2px dashed var(--attlon-green);
+  outline-offset: 4px;
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--attlon-green);
+}
+
+.widget-drag-handle {
+  cursor: grab;
+  cursor: -webkit-grab;
+  user-select: none;
+  opacity: 0.45;
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  margin-right: 2px;
+}
+
+.widget-drag-handle:hover {
+  opacity: 1;
+  color: var(--attlon-green);
+  background: rgba(9, 227, 111, 0.12);
+  transform: scale(1.15);
+}
+
+.widget-drag-handle:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
 }
 
 #widgetCardWeather,

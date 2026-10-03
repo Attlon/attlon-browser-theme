@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initLocationDetection();
   initWidgetHideAndManageButtons();
   initWidgetClickthroughs();
+  initWidgetsDragAndDrop();
+  initNewsDragAndDrop();
   initVersionAndUpdates();
   initDrawerNavigation();
   initSearchAndCopilot();
@@ -829,6 +831,8 @@ function initTechnicalConverter() {
   const modeSelect = document.getElementById('pciConvModeSelect');
   const panelPress = document.getElementById('pciPanelPress');
   const panelFlow = document.getElementById('pciPanelFlow');
+  const panelMass = document.getElementById('pciPanelMass');
+  const panelVol = document.getElementById('pciPanelVol');
   const panelTemp = document.getElementById('pciPanelTemp');
   const panelDensity = document.getElementById('pciPanelDensity');
   const panelLength = document.getElementById('pciPanelLength');
@@ -841,9 +845,11 @@ function initTechnicalConverter() {
   const panels = {
     press: { panel: panelPress, note: 'UNE-EN 12845 · DIN 2448' },
     flow: { panel: panelFlow, note: 'UNE-EN 12845 · NFPA 13/20' },
+    mass: { panel: panelMass, note: 'RIPCI · Dotación de Agente Extintor (kg/lb/oz)' },
+    vol: { panel: panelVol, note: 'UNE 23500 · Reservas de Agua & Espuma' },
     temp: { panel: panelTemp, note: 'Rociadores UNE-EN 12259-1' },
     density: { panel: panelDensity, note: 'Diseño Rociadores UNE-EN 12845' },
-    length: { panel: panelLength, note: 'RIPCI & CTE DB-SI Coberturas' },
+    length: { panel: panelLength, note: 'RIPCI & CTE DB-SI Coberturas (m/yd/ft)' },
     power: { panel: panelPower, note: 'Carga de Fuego Eurocódigos' },
     pipe: { panel: panelPipe, note: 'UNE-EN 10255 Serie Media' }
   };
@@ -1008,7 +1014,56 @@ function initTechnicalConverter() {
     updateDensity();
   }
 
-  // E. Longitud / Distancias de Seguridad PCI
+  // C. Masa / Peso (kg, lb, oz, t, g) - Extintores y Cargas PCI
+  const massInput = document.getElementById('pciMassValInput');
+  const massUnit = document.getElementById('pciMassUnitSelect');
+  const massResults = document.getElementById('pciMassResults');
+
+  function updateMass() {
+    if (!massInput || !massUnit || !massResults) return;
+    const val = parseFloat(massInput.value);
+    if (isNaN(val)) return;
+
+    let kg = val;
+    const u = massUnit.value;
+    if (u === 'lb') kg = val / 2.20462;
+    else if (u === 'oz') kg = val / 35.274;
+    else if (u === 't') kg = val * 1000;
+    else if (u === 'g') kg = val / 1000;
+
+    const lb = (kg * 2.20462).toFixed(2);
+    const oz = (kg * 35.274).toFixed(1);
+    const g = Math.round(kg * 1000).toLocaleString('es-ES');
+    const t = (kg / 1000).toFixed(3);
+    const kgDisp = kg.toFixed(2);
+
+    let badge = 'Carga técnica';
+    if (Math.abs(kg - 2) < 0.3) badge = '🧯 Ext. CO2 2kg (34B)';
+    else if (Math.abs(kg - 5) < 0.4) badge = '🧯 Ext. CO2 5kg (89B Eléctrico)';
+    else if (Math.abs(kg - 6) < 0.4) badge = '🧯 Ext. Polvo ABC 6kg (21A)';
+    else if (Math.abs(kg - 9) < 0.5) badge = '🧯 Ext. Polvo ABC 9kg (34A)';
+    else if (Math.abs(kg - 50) < 2) badge = '🧯 Carro Móvil 50kg (Almacén)';
+    else if (kg < 1) badge = 'Micromasa PCI';
+    else if (kg >= 1000) badge = 'Carga Pesada / Agente Granel';
+
+    let html = '';
+    if (u !== 'kg') html += `<span class="conv-tag">${kgDisp} kg</span>`;
+    if (u !== 'lb') html += `<span class="conv-tag">${lb} lb</span>`;
+    if (u !== 'oz') html += `<span class="conv-tag">${oz} oz</span>`;
+    if (u !== 'g' && kg < 50) html += `<span class="conv-tag">${g} g</span>`;
+    if (u !== 't' && kg >= 100) html += `<span class="conv-tag">${t} t</span>`;
+    html += `<span class="conv-tag conv-highlight" id="pciMassBadge">${badge}</span>`;
+
+    massResults.innerHTML = html;
+  }
+
+  if (massInput && massUnit) {
+    massInput.addEventListener('input', updateMass);
+    massUnit.addEventListener('change', updateMass);
+    updateMass();
+  }
+
+  // D. Longitud / Distancias de Seguridad PCI (m, yd, ft, in, cm, mm)
   const lengthInput = document.getElementById('pciLengthValInput');
   const lengthUnit = document.getElementById('pciLengthUnitSelect');
   const lengthResults = document.getElementById('pciLengthResults');
@@ -1020,12 +1075,16 @@ function initTechnicalConverter() {
 
     let meters = val;
     const u = lengthUnit.value;
-    if (u === 'ft') meters = val * 0.3048;
+    if (u === 'yd') meters = val * 0.9144;
+    else if (u === 'ft') meters = val * 0.3048;
     else if (u === 'in') meters = val * 0.0254;
+    else if (u === 'cm') meters = val / 100;
     else if (u === 'mm') meters = val / 1000;
 
+    const yd = (meters * 1.09361).toFixed(2);
     const ft = (meters * 3.28084).toFixed(1);
-    const inches = (meters * 39.3701).toFixed(0);
+    const inches = (meters * 39.3701).toFixed(1);
+    const cm = (meters * 100).toFixed(1);
     const mm = (meters * 1000).toFixed(0);
     const mDisp = meters.toFixed(2);
 
@@ -1037,9 +1096,11 @@ function initTechnicalConverter() {
 
     let html = '';
     if (u !== 'm') html += `<span class="conv-tag">${mDisp} m</span>`;
+    if (u !== 'yd') html += `<span class="conv-tag">${yd} yd</span>`;
     if (u !== 'ft') html += `<span class="conv-tag">${ft} ft</span>`;
     if (u !== 'in') html += `<span class="conv-tag">${inches} in</span>`;
-    if (u !== 'mm' && meters < 5) html += `<span class="conv-tag">${mm} mm</span>`;
+    if (u !== 'cm' && meters < 10) html += `<span class="conv-tag">${cm} cm</span>`;
+    if (u !== 'mm' && meters < 2) html += `<span class="conv-tag">${mm} mm</span>`;
     html += `<span class="conv-tag conv-highlight">${note}</span>`;
 
     lengthResults.innerHTML = html;
@@ -1049,6 +1110,50 @@ function initTechnicalConverter() {
     lengthInput.addEventListener('input', updateLength);
     lengthUnit.addEventListener('change', updateLength);
     updateLength();
+  }
+
+  // E. Volumen / Depósito PCI (L, m³, gal, ft³)
+  const volInput = document.getElementById('pciVolValInput');
+  const volUnit = document.getElementById('pciVolUnitSelect');
+  const volResults = document.getElementById('pciVolResults');
+
+  function updateVol() {
+    if (!volInput || !volUnit || !volResults) return;
+    const val = parseFloat(volInput.value);
+    if (isNaN(val)) return;
+
+    let liters = val;
+    const u = volUnit.value;
+    if (u === 'm3') liters = val * 1000;
+    else if (u === 'gal') liters = val / 0.264172;
+    else if (u === 'ft3') liters = val / 0.0353147;
+
+    const m3 = (liters / 1000).toFixed(2);
+    const gal = (liters * 0.264172).toFixed(1);
+    const ft3 = (liters * 0.0353147).toFixed(1);
+    const lDisp = Math.round(liters).toLocaleString('es-ES');
+
+    let badge = 'Depósito';
+    if (liters < 50) badge = 'Espumógeno / Agente Portátil';
+    else if (liters <= 500) badge = 'Aljibe Compacto / BIEs';
+    else if (liters <= 12000) badge = 'Reserva BIE 60 min (12 m³)';
+    else if (liters <= 60000) badge = 'Reserva Rociadores Riesgo Ligero';
+    else badge = 'Reserva Mayor UNE 23500 / NFPA';
+
+    let html = '';
+    if (u !== 'l') html += `<span class="conv-tag">${lDisp} L</span>`;
+    if (u !== 'm3') html += `<span class="conv-tag">${m3} m³</span>`;
+    if (u !== 'gal') html += `<span class="conv-tag">${gal} gal</span>`;
+    if (u !== 'ft3') html += `<span class="conv-tag">${ft3} ft³</span>`;
+    html += `<span class="conv-tag conv-highlight" id="pciVolBadge">${badge}</span>`;
+
+    volResults.innerHTML = html;
+  }
+
+  if (volInput && volUnit) {
+    volInput.addEventListener('input', updateVol);
+    volUnit.addEventListener('change', updateVol);
+    updateVol();
   }
 
   // F. Potencia Calorífica / Carga de Fuego
@@ -1485,15 +1590,33 @@ function initNewsTickerSystem() {
 
   function setNewsPosition(pos) {
     if (!POSITIONS.includes(pos)) pos = 'bottom-center';
+    container.classList.remove('is-custom-floating');
+    container.style.left = '';
+    container.style.top = '';
+    localStorage.removeItem('attlon_news_free_pos');
     container.setAttribute('data-position', pos);
     if (posLabel) posLabel.textContent = POS_LABELS[pos] || 'Centro';
     if (drawerPosSelect) drawerPosSelect.value = pos;
     localStorage.setItem('attlon_news_position', pos);
   }
 
-  // Cargar posición guardada
-  const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
-  setNewsPosition(savedPos);
+  // Cargar posición guardada (libre o preset)
+  const savedFreePos = localStorage.getItem('attlon_news_free_pos');
+  if (savedFreePos) {
+    try {
+      const parsed = JSON.parse(savedFreePos);
+      container.classList.add('is-custom-floating');
+      container.style.left = `${parsed.left}px`;
+      container.style.top = `${parsed.top}px`;
+      if (posLabel) posLabel.textContent = 'Libre';
+    } catch {
+      const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
+      setNewsPosition(savedPos);
+    }
+  } else {
+    const savedPos = localStorage.getItem('attlon_news_position') || 'bottom-center';
+    setNewsPosition(savedPos);
+  }
 
   if (posBtn) {
     posBtn.addEventListener('click', (e) => {
@@ -1729,6 +1852,220 @@ function initWidgetClickthroughs() {
 }
 
 // ==========================================================================
+// 10.C DRAG & DROP Y REORDENACIÓN TOTAL DE WIDGETS EN TODAS DIRECCIONES
+// ==========================================================================
+
+function initWidgetsDragAndDrop() {
+  const dock = document.getElementById('compactWidgetsDock');
+  if (!dock) return;
+
+  // 1. Restaurar orden guardado en localStorage
+  const savedOrder = localStorage.getItem('attlon_widgets_order');
+  if (savedOrder) {
+    try {
+      const orderKeys = JSON.parse(savedOrder);
+      if (Array.isArray(orderKeys)) {
+        orderKeys.forEach((key) => {
+          const card = dock.querySelector(`.compact-widget-card[data-widget-key="${key}"]`);
+          if (card) {
+            dock.appendChild(card);
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('Error restaurando orden de widgets:', err);
+    }
+  }
+
+  // 2. Configurar eventos de arrastre bidireccional en cada tarjeta
+  const cards = dock.querySelectorAll('.compact-widget-card');
+  let draggedCard = null;
+
+  cards.forEach((card) => {
+    card.setAttribute('draggable', 'true');
+
+    // Dragstart
+    card.addEventListener('dragstart', (e) => {
+      // Ignorar si se hace clic en elementos interactivos internos
+      if (e.target.closest('input') || e.target.closest('select') || e.target.closest('button') || e.target.closest('a')) {
+        if (!e.target.classList.contains('widget-drag-handle')) {
+          e.preventDefault();
+          return;
+        }
+      }
+      draggedCard = card;
+      e.dataTransfer.setData('text/plain', card.getAttribute('data-widget-key') || '');
+      e.dataTransfer.effectAllowed = 'move';
+      card.classList.add('dragging');
+    });
+
+    // Dragover
+    card.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (draggedCard && draggedCard !== card) {
+        card.classList.add('drag-over');
+      }
+    });
+
+    // Dragleave
+    card.addEventListener('dragleave', () => {
+      card.classList.remove('drag-over');
+    });
+
+    // Drop
+    card.addEventListener('drop', (e) => {
+      e.preventDefault();
+      card.classList.remove('drag-over');
+      if (!draggedCard || draggedCard === card) return;
+
+      const rect = card.getBoundingClientRect();
+      const midX = rect.left + rect.width / 2;
+      const midY = rect.top + rect.height / 2;
+
+      // Inserción antes o después según cursor
+      if (e.clientY < midY || (Math.abs(e.clientY - midY) < 35 && e.clientX < midX)) {
+        dock.insertBefore(draggedCard, card);
+      } else {
+        dock.insertBefore(draggedCard, card.nextSibling);
+      }
+
+      // Guardar el nuevo orden persistente en localStorage
+      const currentCards = dock.querySelectorAll('.compact-widget-card');
+      const orderKeys = Array.from(currentCards)
+        .map((c) => c.getAttribute('data-widget-key'))
+        .filter(Boolean);
+      localStorage.setItem('attlon_widgets_order', JSON.stringify(orderKeys));
+      showToast('✓ Distribución de widgets personalizada y guardada');
+    });
+
+    // Dragend
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      dock.querySelectorAll('.compact-widget-card').forEach((c) => c.classList.remove('drag-over'));
+      draggedCard = null;
+    });
+  });
+}
+
+// ==========================================================================
+// 10.D DRAG & DROP Y PERSONALIZACIÓN DE POSICIÓN DE NOTICIAS
+// ==========================================================================
+
+function initNewsDragAndDrop() {
+  const container = document.getElementById('newsTickerContainer');
+  const handle = document.getElementById('newsDragHandle');
+  if (!container || !handle) return;
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let origLeft = 0;
+  let origTop = 0;
+
+  handle.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    const rect = container.getBoundingClientRect();
+    origLeft = rect.left;
+    origTop = rect.top;
+
+    container.classList.add('dragging');
+    container.classList.add('is-custom-floating');
+    container.style.left = `${origLeft}px`;
+    container.style.top = `${origTop}px`;
+    try {
+      handle.setPointerCapture(e.pointerId);
+    } catch {}
+  });
+
+  handle.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    let newLeft = Math.max(10, Math.min(window.innerWidth - container.offsetWidth - 10, origLeft + dx));
+    let newTop = Math.max(10, Math.min(window.innerHeight - container.offsetHeight - 10, origTop + dy));
+
+    container.style.left = `${newLeft}px`;
+    container.style.top = `${newTop}px`;
+  });
+
+  function stopNewsDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    container.classList.remove('dragging');
+    try {
+      handle.releasePointerCapture(e.pointerId);
+    } catch {}
+
+    const rect = container.getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+    const midX = rect.left + rect.width / 2;
+    const posLabel = document.getElementById('newsPosLabel');
+
+    if (midY < 170) {
+      // Arriba
+      container.classList.remove('is-custom-floating');
+      container.style.left = '';
+      container.style.top = '';
+      localStorage.removeItem('attlon_news_free_pos');
+      container.setAttribute('data-position', 'top-bar');
+      if (posLabel) posLabel.textContent = 'Arriba';
+      localStorage.setItem('attlon_news_position', 'top-bar');
+      showToast('✓ Noticias fijadas en la barra superior');
+    } else if (midX < 360 && midY > 280) {
+      // Izquierda
+      container.classList.remove('is-custom-floating');
+      container.style.left = '';
+      container.style.top = '';
+      localStorage.removeItem('attlon_news_free_pos');
+      container.setAttribute('data-position', 'bottom-left');
+      if (posLabel) posLabel.textContent = 'Izq.';
+      localStorage.setItem('attlon_news_position', 'bottom-left');
+      showToast('✓ Noticias alineadas a la izquierda');
+    } else if (midX > (window.innerWidth - 360) && midY > 280) {
+      // Derecha
+      container.classList.remove('is-custom-floating');
+      container.style.left = '';
+      container.style.top = '';
+      localStorage.removeItem('attlon_news_free_pos');
+      container.setAttribute('data-position', 'bottom-right');
+      if (posLabel) posLabel.textContent = 'Der.';
+      localStorage.setItem('attlon_news_position', 'bottom-right');
+      showToast('✓ Noticias alineadas a la derecha');
+    } else if (Math.abs(midX - window.innerWidth / 2) < 220 && midY > (window.innerHeight - 300)) {
+      // Centro inferior
+      container.classList.remove('is-custom-floating');
+      container.style.left = '';
+      container.style.top = '';
+      localStorage.removeItem('attlon_news_free_pos');
+      container.setAttribute('data-position', 'bottom-center');
+      if (posLabel) posLabel.textContent = 'Centro';
+      localStorage.setItem('attlon_news_position', 'bottom-center');
+      showToast('✓ Noticias centradas en la parte inferior');
+    } else {
+      // Guardar posición libre personalizada
+      const finalPos = { left: Math.round(rect.left), top: Math.round(rect.top) };
+      localStorage.setItem('attlon_news_free_pos', JSON.stringify(finalPos));
+      if (posLabel) posLabel.textContent = 'Libre';
+      showToast('✓ Posición libre de noticias guardada');
+    }
+  }
+
+  handle.addEventListener('pointerup', stopNewsDrag);
+  handle.addEventListener('pointercancel', stopNewsDrag);
+}
+
+// ==========================================================================
 // 11. GESTOR DE MARCADORES (CRUD DINÁMICO)
 // ==========================================================================
 
@@ -1779,6 +2116,40 @@ function renderShortcuts() {
     const item = document.createElement('div');
     item.className = 'shortcut-item';
     item.dataset.index = index;
+    item.setAttribute('draggable', 'true');
+
+    item.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', String(index));
+      e.dataTransfer.effectAllowed = 'move';
+      item.classList.add('dragging');
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      item.classList.add('drag-over');
+    });
+
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drag-over');
+    });
+
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+      if (isNaN(fromIndex) || fromIndex === index) return;
+      const moved = userShortcuts.splice(fromIndex, 1)[0];
+      userShortcuts.splice(index, 0, moved);
+      saveShortcuts();
+      renderShortcuts();
+      showToast('✓ Marcadores reordenados');
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+    });
 
     const link = document.createElement('a');
     link.href = bm.url;

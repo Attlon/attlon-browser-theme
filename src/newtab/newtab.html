@@ -336,6 +336,7 @@
 
         <!-- Selector de posición en pantalla y controles -->
         <div class="news-ambient-controls">
+          <button class="news-ctrl-btn news-drag-handle" id="newsDragHandle" title="Arrastra para mover la barra de noticias por la pantalla">⠿ <span class="hide-mobile">Mover</span></button>
           <button class="news-ctrl-btn news-pos-btn" id="newsPosBtn" title="Cambiar posición en pantalla (Centro, Izq, Der, Arriba)">⤢ <span id="newsPosLabel">Centro</span></button>
           <button class="news-ctrl-btn" id="newsPrevBtn" title="Noticia anterior">‹</button>
           <button class="news-ctrl-btn" id="newsPauseBtn" title="Pausar / Reanudar">⏸</button>
@@ -359,8 +360,9 @@
     <section class="compact-widgets-dock" id="compactWidgetsDock">
       
       <!-- Widget 1: El Tiempo en Vivo (Rediseñado Compacto y Elegante) -->
-      <div class="compact-widget-card" id="widgetCardWeather" data-widget-key="weather">
+      <div class="compact-widget-card" id="widgetCardWeather" data-widget-key="weather" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <button class="widget-title-btn" id="weatherCityDropdownBtn" title="Cambiar ciudad">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -393,8 +395,9 @@
       </div>
 
       <!-- Widget 2: Calidad del Aire & Seguridad Ambiental (Open-Meteo Air Quality API) -->
-      <div class="compact-widget-card" id="widgetCardAir" data-widget-key="air">
+      <div class="compact-widget-card" id="widgetCardAir" data-widget-key="air" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#09E36F;">🍃</span> Calidad Aire
           </span>
@@ -420,8 +423,9 @@
       </div>
 
       <!-- Widget 3: Mercados & Divisas en Vivo (Open Exchange Rate API) -->
-      <div class="compact-widget-card" id="widgetCardCurrency" data-widget-key="currency">
+      <div class="compact-widget-card" id="widgetCardCurrency" data-widget-key="currency" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#00A4EF;">💶</span> Divisas en Vivo
           </span>
@@ -450,8 +454,9 @@
       </div>
 
       <!-- Widget 4: Tareas Rápidas & Objetivos del Día (To-Do List) -->
-      <div class="compact-widget-card" id="widgetCardTasks" data-widget-key="tasks">
+      <div class="compact-widget-card" id="widgetCardTasks" data-widget-key="tasks" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#FFB900;">✓</span> Tareas del Día
           </span>
@@ -471,8 +476,9 @@
       </div>
 
       <!-- Widget 5: Calculadora Hidráulica PCI (Q = K · √P) -->
-      <div class="compact-widget-card" id="widgetCardHydraulic" data-widget-key="hydraulic">
+      <div class="compact-widget-card" id="widgetCardHydraulic" data-widget-key="hydraulic" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#EF4444;">🧯</span> Hidráulica PCI
           </span>
@@ -535,8 +541,9 @@
       </div>
 
       <!-- Widget 6: Conversor Técnico de Unidades PCI -->
-      <div class="compact-widget-card" id="widgetCardConverter" data-widget-key="converter">
+      <div class="compact-widget-card" id="widgetCardConverter" data-widget-key="converter" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#09E36F;">📐</span> Conversor
           </span>
@@ -544,9 +551,11 @@
             <select id="pciConvModeSelect" class="pci-conv-mode-select" title="Modo de conversión">
               <option value="press" selected>Presión</option>
               <option value="flow">Caudal</option>
+              <option value="mass">Masa / Peso (kg, lb, oz)</option>
+              <option value="length">Longitud / Dist. (m, yd, ft)</option>
+              <option value="vol">Volumen / Tanque (L, m³, gal)</option>
               <option value="temp">Temperatura</option>
               <option value="density">Densidad PCI</option>
-              <option value="length">Longitud / Dist.</option>
               <option value="power">Potencia / Calor</option>
               <option value="pipe">Tubería</option>
             </select>
@@ -588,6 +597,66 @@
             </div>
           </div>
 
+          <!-- Modo Masa / Peso (kg, lb, oz, t, g) -->
+          <div class="pci-conv-panel" id="pciPanelMass" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciMassValInput" value="6" min="0.01" step="1" class="pci-conv-input">
+              <select id="pciMassUnitSelect" class="pci-conv-unit">
+                <option value="kg" selected>kg</option>
+                <option value="lb">lb (libras)</option>
+                <option value="oz">oz (onzas)</option>
+                <option value="t">t (tonelada)</option>
+                <option value="g">g (gramos)</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciMassResults">
+              <span class="conv-tag">13.23 lb</span>
+              <span class="conv-tag">211.6 oz</span>
+              <span class="conv-tag">6,000 g</span>
+              <span class="conv-tag conv-highlight" id="pciMassBadge">Extintor ABC estándar (6 kg)</span>
+            </div>
+          </div>
+
+          <!-- Modo Longitud / Recorrido de Evacuación y Extintores -->
+          <div class="pci-conv-panel" id="pciPanelLength" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciLengthValInput" value="15" min="0.1" step="1" class="pci-conv-input">
+              <select id="pciLengthUnitSelect" class="pci-conv-unit">
+                <option value="m" selected>m</option>
+                <option value="yd">yd (yardas)</option>
+                <option value="ft">ft (pies)</option>
+                <option value="in">in (pulg.)</option>
+                <option value="cm">cm</option>
+                <option value="mm">mm</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciLengthResults">
+              <span class="conv-tag">16.4 yd</span>
+              <span class="conv-tag">49.2 ft</span>
+              <span class="conv-tag">590.6 in</span>
+              <span class="conv-tag conv-highlight">Máx. Extintor (15m)</span>
+            </div>
+          </div>
+
+          <!-- Modo Volumen / Depósito PCI (L, m³, gal, ft³) -->
+          <div class="pci-conv-panel" id="pciPanelVol" style="display:none;">
+            <div class="pci-conv-input-row">
+              <input type="number" id="pciVolValInput" value="1000" min="0.1" step="100" class="pci-conv-input">
+              <select id="pciVolUnitSelect" class="pci-conv-unit">
+                <option value="l" selected>L (litros)</option>
+                <option value="m3">m³</option>
+                <option value="gal">gal (US)</option>
+                <option value="ft3">ft³ (cu ft)</option>
+              </select>
+            </div>
+            <div class="pci-conv-results" id="pciVolResults">
+              <span class="conv-tag">1.00 m³</span>
+              <span class="conv-tag">264.2 gal</span>
+              <span class="conv-tag">35.3 ft³</span>
+              <span class="conv-tag conv-highlight" id="pciVolBadge">Depósito PCI / Reserva</span>
+            </div>
+          </div>
+
           <!-- Modo Temperatura con Código de Bulbos de Rociadores -->
           <div class="pci-conv-panel" id="pciPanelTemp" style="display:none;">
             <div class="pci-conv-input-row">
@@ -617,24 +686,6 @@
             <div class="pci-conv-results" id="pciDensityResults">
               <span class="conv-tag">0.123 gpm/ft²</span>
               <span class="conv-tag conv-highlight">Riesgo Ordinario (RO)</span>
-            </div>
-          </div>
-
-          <!-- Modo Longitud / Recorrido de Evacuación y Extintores -->
-          <div class="pci-conv-panel" id="pciPanelLength" style="display:none;">
-            <div class="pci-conv-input-row">
-              <input type="number" id="pciLengthValInput" value="15" min="0.1" step="1" class="pci-conv-input">
-              <select id="pciLengthUnitSelect" class="pci-conv-unit">
-                <option value="m" selected>m</option>
-                <option value="ft">ft (pies)</option>
-                <option value="in">in (pulg.)</option>
-                <option value="mm">mm</option>
-              </select>
-            </div>
-            <div class="pci-conv-results" id="pciLengthResults">
-              <span class="conv-tag">49.2 ft</span>
-              <span class="conv-tag">590.6 in</span>
-              <span class="conv-tag conv-highlight">Máx. Extintor (15m)</span>
             </div>
           </div>
 
@@ -684,8 +735,9 @@
       </div>
 
       <!-- Widget 7: Dotación & Cobertura PCI y Seguridad (RIPCI · CTE DB-SI) -->
-      <div class="compact-widget-card" id="widgetCardCoverage" data-widget-key="coverage">
+      <div class="compact-widget-card" id="widgetCardCoverage" data-widget-key="coverage" draggable="true">
         <div class="widget-header">
+          <span class="widget-drag-handle" title="Arrastra para reordenar este widget en cualquier dirección">⠿</span>
           <span class="widget-title-static">
             <span style="color:#F59E0B;">🛡️</span> Cobertura PCI
           </span>
