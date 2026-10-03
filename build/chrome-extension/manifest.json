@@ -16,7 +16,11 @@
     "https://*.open-meteo.com/*",
     "https://open.er-api.com/*",
     "https://ipwho.is/*",
-    "https://freeipapi.com/*"
+    "https://freeipapi.com/*",
+    "https://news.google.com/*",
+    "https://feeds.elpais.com/*",
+    "https://www.20minutos.es/*",
+    "https://*.tecnifuego.org/*"
   ],
   "icons": {
     "16": "assets/icons/icon16.png",

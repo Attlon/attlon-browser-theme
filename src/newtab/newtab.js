@@ -1467,98 +1467,224 @@ function initLocationDetection() {
 // 8.2 BARRA DINÁMICA DE NOTICIAS: ESPAÑA & PROTECCIÓN CONTRA INCENDIOS (PCI)
 // ==========================================================================
 
-const NEWS_DATA = [
+// Noticias reales verificadas oficiales como base de arranque
+let NEWS_DATA = [
+  {
+    cat: 'pci',
+    tag: 'BOE · RIPCI',
+    tagClass: 'cat-normativa',
+    title: 'Reglamento de Instalaciones de Protección Contra Incendios (RIPCI RD 513/2017)',
+    summary: 'Publicación oficial en el Boletín Oficial del Estado sobre condiciones y requisitos para diseño e instalación de sistemas PCI.',
+    url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642',
+    time: 'BOE Oficial',
+    source: 'Boletín Oficial del Estado'
+  },
+  {
+    cat: 'pci',
+    tag: 'CTE DB-SI · Seguridad',
+    tagClass: 'cat-normativa',
+    title: 'Documento Básico SI: Seguridad en caso de incendio en edificación y evacuación',
+    summary: 'Directrices oficiales de resistencia estructural al fuego, sectorización y vías de evacuación en el Código Técnico de la Edificación.',
+    url: 'https://www.codigotecnico.org/DocumentosCTE/SeguridadEnCasoDeIncendio.html',
+    time: 'Oficial',
+    source: 'Código Técnico'
+  },
   {
     cat: 'pci',
     tag: 'PCI · Tecnifuego',
     tagClass: 'cat-pci',
-    title: 'Tecnifuego impulsa el marco técnico para Centrales Receptoras de Incendios (CRI) y telegestión',
-    summary: 'Presentación de directrices para la verificación remota de alarmas y coordinación digital con servicios de bomberos.',
+    title: 'Tecnifuego: Guías técnicas y novedades del sector de la protección contra incendios en España',
+    summary: 'Portal oficial de la Asociación Española de Sociedades de Protección contra Incendios con directrices y eventos técnicos.',
     url: 'https://www.tecnifuego.org/',
-    time: 'Hoy · 10:30'
-  },
-  {
-    cat: 'pci',
-    tag: 'Normativa · Baterías & FV',
-    tagClass: 'cat-normativa',
-    title: 'APICI y Tecnifuego analizan los protocolos PCI en plantas fotovoltaicas y baterías de litio',
-    summary: 'Directrices técnicas de supresión de incendios por embalamiento térmico y sectorización en cubiertas industriales.',
-    url: 'https://www.tecnifuego.org/',
-    time: 'Hace 2h'
-  },
-  {
-    cat: 'pci',
-    tag: 'Ministerio · RIPCI',
-    tagClass: 'cat-normativa',
-    title: 'Guía técnica del RIPCI (RD 513/2017): Nuevos criterios de inspección periódica de BIEs y rociadores',
-    summary: 'Exigencias de certificación acreditada por ENAC para mantenedores autorizados y actas digitales de revisión.',
-    url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2017-6642',
-    time: 'Hace 3h'
-  },
-  {
-    cat: 'pci',
-    tag: 'PCI · Cepreven',
-    tagClass: 'cat-pci',
-    title: 'CEPREVEN publica la directriz R.T.4-ABA sobre reservas hídricas y grupos de presión en logística',
-    summary: 'Criterios de autonomía mínima de bombeo, redundancia diésel y dimensionamiento de depósitos para grandes centros.',
-    url: 'https://www.cepreven.com/',
-    time: 'Hace 5h'
-  },
-  {
-    cat: 'pci',
-    tag: 'CTE DB-SI · Vivienda',
-    tagClass: 'cat-normativa',
-    title: 'Ministerio de Vivienda actualiza criterios de evacuación y resistencia al fuego EI en edificación',
-    summary: 'Aclaraciones sobre longitudes máximas de evacuación (25m salida única / 50m alternativa) y puertas cortafuegos.',
-    url: 'https://www.codigotecnico.org/DocumentosCTE/SeguridadEnCasoDeIncendio.html',
-    time: 'Ayer'
+    time: 'Oficial',
+    source: 'Tecnifuego'
   },
   {
     cat: 'spain',
-    tag: 'Protección Civil · 112',
+    tag: 'España · El País',
     tagClass: 'cat-spain',
-    title: 'Protección Civil consolida la red ES-Alert para emergencias industriales y autoprotección',
-    summary: 'Protocolos de confinamiento y aviso inmediato a la población en zonas limítrofes con polígonos químicos.',
-    url: 'https://www.proteccioncivil.es/',
-    time: 'Ayer'
-  },
-  {
-    cat: 'pci',
-    tag: 'Attlon · Cottés',
-    tagClass: 'cat-pci',
-    title: 'Attlon optimiza el control de humos y la compartimentación de naves con simulación CFD avanzada',
-    summary: 'Ingeniería prestacional en exutorios certificados UNE-EN 12101-2 y barreras de contención térmica.',
-    url: 'https://attlon.com/',
-    time: 'Esta semana'
-  },
-  {
-    cat: 'pci',
-    tag: 'Seguridad · INSST',
-    tagClass: 'cat-normativa',
-    title: 'INSST publica directrices de seguridad contra atmósferas explosivas (ATEX) en silos y tolvas',
-    summary: 'Medidas de prevención en manipulación de polvos orgánicos combustibles y venteo de deflagraciones.',
-    url: 'https://www.insst.es/',
-    time: 'Esta semana'
+    title: 'El País: Portada de información nacional, economía y actualidad de España',
+    summary: 'Cobertura periodística completa y análisis de la actualidad económica y social española.',
+    url: 'https://elpais.com/espana/',
+    time: 'En vivo',
+    source: 'El País'
   },
   {
     cat: 'spain',
-    tag: 'España · Industria',
+    tag: 'AEMET · Avisos',
     tagClass: 'cat-spain',
-    title: 'El tejido industrial español acelera la inversión en eficiencia hídrica y sensorización PCI',
-    summary: 'Planes de modernización en polígonos industriales con monitorización IoT en tiempo real de presiones y reservas.',
-    url: 'https://elpais.com/economia/',
-    time: 'Esta semana'
-  },
-  {
-    cat: 'spain',
-    tag: 'AEMET & DGT · Tráfico',
-    tagClass: 'cat-spain',
-    title: 'AEMET y DGT coordinan avisos de emergencias meteorológicas y planes de contingencia logística',
-    summary: 'Activación de planes preventivos ante fenómenos meteorológicos adversos y accesos a corredores industriales.',
+    title: 'AEMET: Mapa oficial de avisos y alertas meteorológicas activas en España',
+    summary: 'Servicio meteorológico oficial de avisos de fenómenos meteorológicos adversos en tiempo real para seguridad y logística.',
     url: 'https://www.aemet.es/es/eltiempo/prediccion/avisos',
-    time: 'Reciente'
+    time: 'En vivo',
+    source: 'AEMET'
   }
 ];
+
+function formatNewsRelativeTime(dateStr) {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return 'En directo';
+    const diffMs = Date.now() - d.getTime();
+    const diffMin = Math.round(diffMs / 60000);
+    if (diffMin < 5) return 'Ahora';
+    if (diffMin < 60) return `Hace ${diffMin}m`;
+    const diffH = Math.round(diffMin / 60);
+    if (diffH < 24) return `Hace ${diffH}h`;
+    const diffDays = Math.round(diffH / 24);
+    if (diffDays === 1) return 'Ayer';
+    return `Hace ${diffDays}d`;
+  } catch {
+    return 'En directo';
+  }
+}
+
+function cleanNewsText(html) {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+async function fetchLiveNews() {
+  // 1. Cargar caché de noticias si existe
+  const cachedNews = localStorage.getItem('attlon_live_news_cache');
+  if (cachedNews) {
+    try {
+      const parsedCache = JSON.parse(cachedNews);
+      if (parsedCache && Array.isArray(parsedCache.data) && parsedCache.data.length > 0) {
+        NEWS_DATA = parsedCache.data;
+        if (window.__renderCurrentNews) window.__renderCurrentNews();
+        if (Date.now() - parsedCache.time < 15 * 60 * 1000) {
+          return;
+        }
+      }
+    } catch {}
+  }
+
+  try {
+    const pciUrl = 'https://news.google.com/rss/search?q=incendios+OR+tecnifuego+OR+"seguridad+industrial"+OR+"proteccion+contra+incendios"&hl=es&gl=ES&ceid=ES:es';
+    const epUrl = 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada';
+    const tmUrl = 'https://www.20minutos.es/rss/';
+
+    const [resPci, resEp, resTm] = await Promise.allSettled([
+      fetch(pciUrl).then(r => r.text()),
+      fetch(epUrl).then(r => r.text()),
+      fetch(tmUrl).then(r => r.text())
+    ]);
+
+    const parser = new DOMParser();
+    const livePci = [];
+    const liveSpain = [];
+
+    // 1. Feed real de Incendios, Tecnifuego y Seguridad Industrial
+    if (resPci.status === 'fulfilled' && resPci.value) {
+      const doc = parser.parseFromString(resPci.value, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      items.forEach((item, idx) => {
+        if (idx >= 15) return;
+        const rawTitle = cleanNewsText(item.querySelector('title')?.textContent);
+        const link = item.querySelector('link')?.textContent?.trim();
+        const pubDate = item.querySelector('pubDate')?.textContent?.trim();
+        const sourceEl = item.querySelector('source');
+        let sourceName = sourceEl ? cleanNewsText(sourceEl.textContent) : 'PCI';
+        let cleanTitle = rawTitle;
+
+        const lastDash = rawTitle.lastIndexOf(' - ');
+        if (lastDash > 15) {
+          cleanTitle = rawTitle.substring(0, lastDash).trim();
+          if (!sourceEl) sourceName = rawTitle.substring(lastDash + 3).trim();
+        }
+
+        if (cleanTitle && link) {
+          livePci.push({
+            cat: 'pci',
+            tag: `PCI · ${sourceName}`,
+            tagClass: 'cat-pci',
+            title: cleanTitle,
+            summary: `Noticia técnica de seguridad y protección contra incendios publicada por ${sourceName}. Clic para leer el artículo original completo.`,
+            url: link,
+            time: formatNewsRelativeTime(pubDate),
+            source: sourceName
+          });
+        }
+      });
+    }
+
+    // 2. Feed real de El País (España / Actualidad nacional)
+    if (resEp.status === 'fulfilled' && resEp.value) {
+      const doc = parser.parseFromString(resEp.value, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      items.forEach((item, idx) => {
+        if (idx >= 10) return;
+        const title = cleanNewsText(item.querySelector('title')?.textContent);
+        const link = item.querySelector('link')?.textContent?.trim();
+        const desc = cleanNewsText(item.querySelector('description')?.textContent);
+        const pubDate = item.querySelector('pubDate')?.textContent?.trim();
+
+        if (title && link) {
+          liveSpain.push({
+            cat: 'spain',
+            tag: 'España · El País',
+            tagClass: 'cat-spain',
+            title: title,
+            summary: desc && desc !== title ? desc : 'Información nacional y actualidad en directo. Clic para ver la noticia completa en El País.',
+            url: link,
+            time: formatNewsRelativeTime(pubDate),
+            source: 'El País'
+          });
+        }
+      });
+    }
+
+    // 3. Feed real de 20Minutos (Lo último)
+    if (resTm.status === 'fulfilled' && resTm.value) {
+      const doc = parser.parseFromString(resTm.value, 'text/xml');
+      const items = doc.querySelectorAll('item');
+      items.forEach((item, idx) => {
+        if (idx >= 8) return;
+        const title = cleanNewsText(item.querySelector('title')?.textContent);
+        const link = item.querySelector('link')?.textContent?.trim();
+        const desc = cleanNewsText(item.querySelector('description')?.textContent);
+        const pubDate = item.querySelector('pubDate')?.textContent?.trim();
+
+        if (title && link) {
+          liveSpain.push({
+            cat: 'spain',
+            tag: 'España · 20Minutos',
+            tagClass: 'cat-spain',
+            title: title,
+            summary: desc && desc !== title ? desc : 'Última hora informativa de España. Clic para leer la noticia completa en 20Minutos.',
+            url: link,
+            time: formatNewsRelativeTime(pubDate),
+            source: '20Minutos'
+          });
+        }
+      });
+    }
+
+    // Intercalar noticias PCI y España para una rotación equilibrada
+    if (livePci.length > 0 || liveSpain.length > 0) {
+      const combined = [];
+      const maxLen = Math.max(livePci.length, liveSpain.length);
+      for (let i = 0; i < maxLen; i++) {
+        if (i < livePci.length) combined.push(livePci[i]);
+        if (i < liveSpain.length) combined.push(liveSpain[i]);
+      }
+
+      if (combined.length > 0) {
+        NEWS_DATA = combined;
+        localStorage.setItem('attlon_live_news_cache', JSON.stringify({
+          time: Date.now(),
+          data: combined
+        }));
+        if (window.__renderCurrentNews) window.__renderCurrentNews();
+      }
+    }
+  } catch (err) {
+    console.warn('Error al obtener noticias en vivo:', err);
+  }
+}
 
 function initNewsTickerSystem() {
   const container = document.getElementById('newsTickerContainer');
@@ -1759,8 +1885,13 @@ function setNewsPosition(pos) {
   });
 
   // Inicialización inmediata
+  window.__renderCurrentNews = renderCurrentNews;
   renderCurrentNews();
   startRotation();
+
+  // Noticias reales en vivo (RSS) y refresco cada 15 minutos
+  fetchLiveNews();
+  setInterval(fetchLiveNews, 15 * 60 * 1000);
 }
 
 // ==========================================================================
