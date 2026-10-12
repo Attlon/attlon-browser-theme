@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad | Attlon Workspace & Dynamic Dashboard</title>
+  <meta name="description" content="Política de privacidad oficial y justificación detallada de permisos para la extensión Attlon Workspace & Dynamic Dashboard en Chrome Web Store y Microsoft Edge.">
+  <link rel="icon" type="image/png" href="assets/icons/icon32.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .lang-en { display: none; }
+    body.show-en .lang-es { display: none; }
+    body.show-en .lang-en { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand">
+        <img src="assets/logo/attlon-logo-light.svg" alt="Attlon" class="brand-logo" onerror="this.src='assets/icons/icon48.png'">
+        <div class="brand-text">
+          <span class="brand-name">Attlon Workspace <span class="brand-badge">Extensión</span></span>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Inicio</a></li>
+        <li><a href="index.html#features" class="nav-link">Características</a></li>
+        <li><a href="index.html#install" class="nav-link">Instalación</a></li>
+        <li><a href="privacy.html" class="nav-link active">Privacidad</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Selector de idioma">
+          <button id="btnEs" class="lang-btn active" onclick="switchLang('es')">ES</button>
+          <button id="btnEn" class="lang-btn" onclick="switchLang('en')">EN</button>
+        </div>
+        <a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Instalar en Chrome</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="policy-header">
+      <div class="policy-badge">
+        <span class="lang-es">Transparencia y Seguridad de Datos</span>
+        <span class="lang-en">Transparency & Data Security</span>
+      </div>
+      <h1 class="policy-title">
+        <span class="lang-es">Política de Privacidad y Prácticas de Datos</span>
+        <span class="lang-en">Privacy Policy & Data Practices</span>
+      </h1>
+      <div class="policy-meta">
+        <span><strong>Versión:</strong> 1.5.0</span>
+        <span><strong>Última actualización:</strong> Octubre 2026</span>
+        <span><strong>Desarrollador:</strong> Attlon Industrial Safety</span>
+        <span><strong>Contacto:</strong> privacy@attlon.com</span>
+      </div>
+    </div>
+
+    <!-- SPANISH VERSION -->
+    <div class="lang-es">
+      <div class="policy-body">
+        <!-- Sidebar Navigation -->
+        <aside class="policy-toc">
+          <div class="toc-title">Contenido</div>
+          <ul class="toc-list">
+            <li><a href="#es-resumen" class="toc-link">1. Declaración de Principios</a></li>
+            <li><a href="#es-almacenamiento" class="toc-link">2. Almacenamiento Local</a></li>
+            <li><a href="#es-permisos" class="toc-link">3. Justificación de Permisos</a></li>
+            <li><a href="#es-red" class="toc-link">4. Justificación de Red (Hosts)</a></li>
+            <li><a href="#es-marcadores" class="toc-link">5. Permiso de Marcadores</a></li>
+            <li><a href="#es-google-compliance" class="toc-link">6. Cumplimiento Chrome & Edge</a></li>
+            <li><a href="#es-contacto" class="toc-link">7. Contacto</a></li>
+          </ul>
+        </aside>
+
+        <!-- Content -->
+        <div class="policy-content">
+          <section id="es-resumen" class="policy-section">
+            <h2>1. Declaración de Principios y Privacidad por Diseño</h2>
+            <p>
+              En <strong>Attlon Industrial Safety</strong>, la seguridad y la confidencialidad son valores fundamentales. La extensión de navegador <strong>Attlon Workspace & Dynamic Dashboard</strong> ha sido desarrollada bajo la premisa de <em>Zero-Tracking</em> (Cero Rastreo) y <em>Privacidad por Diseño</em>.
+            </p>
+            <div class="callout-box">
+              <p>
+                <strong>Resumen directo:</strong> La extensión <strong>NO recopila</strong>, <strong>NO almacena en servidores externos</strong> y <strong>NO vende ni transfiere</strong> ningún dato personal, historial de navegación, consultas de búsqueda ni información identificable del usuario. Todo se ejecuta estrictamente en el navegador local del usuario.
+              </p>
+            </div>
+            <ul>
+              <li>Sin cuentas de usuario ni registro obligatorio.</li>
+              <li>Sin cookies de seguimiento ni píxeles publicitarios.</li>
+              <li>Sin herramientas de analítica remota (ni Google Analytics, ni Mixpanel, ni telemetría propia).</li>
+              <li>Sin intermediación de servidores propios para procesar tus consultas o widgets.</li>
+            </ul>
+          </section>
+
+          <section id="es-almacenamiento" class="policy-section">
+            <h2>2. Almacenamiento de Preferencias en el Dispositivo (Local-Only)</h2>
+            <p>
+              Todas las preferencias del usuario (widgets activos, notas personales del widget de notas, enlaces de acceso rápido añadidos manualmente, moneda seleccionada y ciudad para la previsión meteorológica) se almacenan única y exclusivamente a través de la API estándar <code>localStorage</code> del navegador en el equipo local del usuario.
+            </p>
+            <p>
+              Dichos datos jamás abandonan el navegador ni son transmitidos a servidores de Attlon ni a terceros. Al desinstalar la extensión o limpiar los datos del navegador, toda la configuración almacenada se elimina de forma permanente.
+            </p>
+          </section>
+
+          <section id="es-permisos" class="policy-section">
+            <h2>3. Justificación de Permisos de la Extensión (Manifest V3)</h2>
+            <p>
+              La extensión declara únicamente los permisos estrictamente necesarios para ofrecer las funciones del panel de trabajo interactivo en la Nueva Pestaña (New Tab):
+            </p>
+            <ul>
+              <li>
+                <strong><code>chrome_url_overrides.newtab</code></strong>: Permite sustituir la página de nueva pestaña en blanco por el panel corporativo dinámico de productividad y seguridad de Attlon.
+              </li>
+              <li>
+                <strong><code>bookmarks</code></strong>: Requerido de forma exclusiva para leer los marcadores guardados en el navegador y presentarlos en el widget organizador de marcadores del panel. <em>(Véase la sección 5 para más detalles)</em>.
+              </li>
+            </ul>
+          </section>
+
+          <section id="es-red" class="policy-section">
+            <h2>4. Justificación Exhaustiva de Conexiones de Red (Host Permissions)</h2>
+            <p>
+              Para cumplir con los más altos estándares de seguridad de la <strong>Chrome Web Store</strong> y <strong>Microsoft Edge Add-ons</strong>, la extensión no utiliza permisos genéricos ni comodines globales (como <code>&lt;all_urls&gt;</code>). Todos los orígenes de red están explícitamente delimitados y justificados:
+            </p>
+
+            <div class="policy-table-wrapper">
+              <table class="policy-table">
+                <thead>
+                  <tr>
+                    <th>Dominio Autorizado</th>
+                    <th>Finalidad Exclusiva</th>
+                    <th>Datos Enviados</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>api.open-meteo.com</code></td>
+                    <td>Consulta meteorológica pública en tiempo real (temperatura, viento, humedad, radiación UV) para el widget de clima.</td>
+                    <td>Coordenadas geográficas lat/lon de la ciudad elegida. No se envían datos personales.</td>
+                  </tr>
+                  <tr>
+                    <td><code>geocoding-api.open-meteo.com</code></td>
+                    <td>Buscador de ciudades y autocompletado en el widget meteorológico cuando el usuario teclea su localidad.</td>
+                    <td>Nombre del municipio introducido para la búsqueda geográfica.</td>
+                  </tr>
+                  <tr>
+                    <td><code>air-quality-api.open-meteo.com</code></td>
+                    <td>Métricas públicas de calidad del aire (ICA, partículas PM2.5, PM10) orientadas a la seguridad y prevención en entornos industriales.</td>
+                    <td>Coordenadas lat/lon de la ciudad seleccionada.</td>
+                  </tr>
+                  <tr>
+                    <td><code>open.er-api.com</code></td>
+                    <td>Tipos de cambio de divisas abiertos (EUR, USD, GBP, etc.) para el widget de calculadora y conversión financiera.</td>
+                    <td>Ninguno (petición GET estática a tasas de cambio públicas).</td>
+                  </tr>
+                  <tr>
+                    <td><code>ipwho.is</code> / <code>freeipapi.com</code></td>
+                    <td>Detección automática opcional de ubicación aproximada por IP si el usuario pulsa expresamente el botón de geolocalización.</td>
+                    <td>Dirección IP de conexión del cliente requerida para resolver el país/provincia. No se almacena ni se perfila.</td>
+                  </tr>
+                  <tr>
+                    <td><code>news.google.com</code></td>
+                    <td>Lectura de titulares de noticias públicas en formato RSS delimitados a noticias de Protección Contra Incendios (PCI) y seguridad industrial.</td>
+                    <td>Ninguno (lectura GET de feeds RSS públicos).</td>
+                  </tr>
+                  <tr>
+                    <td><code>feeds.elpais.com</code></td>
+                    <td>Lectura de titulares de actualidad y economía de España en formato RSS para el cintillo informativo en tiempo real.</td>
+                    <td>Ninguno (lectura GET de feeds RSS públicos).</td>
+                  </tr>
+                  <tr>
+                    <td><code>www.20minutos.es</code></td>
+                    <td>Lectura de titulares de actualidad española en formato RSS para el carrusel de noticias en vivo.</td>
+                    <td>Ninguno (lectura GET de feeds RSS públicos).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <strong>Nota técnica de integridad:</strong> Todas las peticiones a estos servicios se efectúan mediante peticiones <code>fetch()</code> de lectura (método GET), sin enviar credenciales (sin cookies) y procesándose el contenido directamente en la memoria del navegador.
+            </p>
+          </section>
+
+          <section id="es-marcadores" class="policy-section">
+            <h2>5. Uso del Permiso de Marcadores (Bookmarks Permission)</h2>
+            <p>
+              El permiso <code>bookmarks</code> se utiliza con la única finalidad de permitir al usuario consultar, buscar y acceder con un solo clic a sus enlaces corporativos y marcadores habituales desde el propio panel de la nueva pestaña.
+            </p>
+            <ul>
+              <li>El acceso es <strong>estrictamente local</strong>: La API <code>chrome.bookmarks.getTree()</code> lee el árbol de marcadores directamente en la memoria local del navegador.</li>
+              <li>Los marcadores <strong>nunca se exportan</strong>, ni se sincronizan con servidores remotos de Attlon, ni se transmiten por red bajo ninguna circunstancia.</li>
+              <li>La extensión <strong>no modifica, no sobrescribe y no borra</strong> marcadores sin la interacción y acción voluntaria del usuario.</li>
+            </ul>
+          </section>
+
+          <section id="es-google-compliance" class="policy-section">
+            <h2>6. Compromiso de Cumplimiento con Políticas de Chrome Web Store y Edge Add-ons</h2>
+            <p>
+              En estricto cumplimiento con la <em>Política del Programa para Desarrolladores de Chrome Web Store</em> y las <em>Directrices para Desarrolladores de Complementos de Microsoft Edge</em>:
+            </p>
+            <ul>
+              <li><strong>No venta de datos:</strong> La extensión no vende, comercializa ni alquila datos de los usuarios a intermediarios de datos, anunciantes ni ningún tercero.</li>
+              <li><strong>Propósito único:</strong> Toda la información manejada se utiliza de forma exclusiva para alimentar las funciones de productividad, información meteorológica, económica y de seguridad visualizadas en el panel.</li>
+              <li><strong>Sin fines crediticios ni de calificación:</strong> La información no se utiliza para determinar solvencia financiera ni evaluar riesgos crediticios.</li>
+              <li><strong>Sin publicidad dirigida:</strong> La extensión no muestra anuncios publicitarios personalizados ni contiene código de redes de afiliación.</li>
+            </ul>
+          </section>
+
+          <section id="es-contacto" class="policy-section">
+            <h2>7. Contacto y Responsable de Tratamiento</h2>
+            <p>
+              Para cualquier consulta sobre esta política de privacidad o sobre el funcionamiento técnico de la extensión, puedes ponerte en contacto con nuestro equipo de ingeniería y privacidad:
+            </p>
+            <p>
+              <strong>Attlon Industrial Safety</strong><br>
+              Sitio web: <a href="https://attlon.com/" target="_blank" rel="noopener">https://attlon.com/</a><br>
+              Correo electrónico: <a href="mailto:privacy@attlon.com">privacy@attlon.com</a>
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH VERSION -->
+    <div class="lang-en">
+      <div class="policy-body">
+        <!-- Sidebar Navigation -->
+        <aside class="policy-toc">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li><a href="#en-principles" class="toc-link">1. Core Principles</a></li>
+            <li><a href="#en-storage" class="toc-link">2. Local Storage Only</a></li>
+            <li><a href="#en-permissions" class="toc-link">3. Extension Permissions</a></li>
+            <li><a href="#en-hosts" class="toc-link">4. Host Permissions Justification</a></li>
+            <li><a href="#en-bookmarks" class="toc-link">5. Bookmarks Usage</a></li>
+            <li><a href="#en-compliance" class="toc-link">6. Store Compliance</a></li>
+            <li><a href="#en-contact" class="toc-link">7. Contact & Support</a></li>
+          </ul>
+        </aside>
+
+        <!-- Content -->
+        <div class="policy-content">
+          <section id="en-principles" class="policy-section">
+            <h2>1. Core Principles & Privacy by Design</h2>
+            <p>
+              At <strong>Attlon Industrial Safety</strong>, security and confidentiality are core engineering values. The <strong>Attlon Workspace & Dynamic Dashboard</strong> browser extension is built upon <em>Zero-Tracking</em> and <em>Privacy by Design</em> principles.
+            </p>
+            <div class="callout-box">
+              <p>
+                <strong>Summary:</strong> This extension <strong>DOES NOT collect</strong>, <strong>DOES NOT store on external servers</strong>, and <strong>DOES NOT sell or transfer</strong> any personal data, browsing history, search queries, or user identifiers. Everything runs locally inside the user's browser.
+              </p>
+            </div>
+            <ul>
+              <li>No user accounts or sign-in required.</li>
+              <li>No tracking cookies or marketing pixels.</li>
+              <li>No remote analytics SDKs (No Google Analytics, Mixpanel, or telemetry endpoints).</li>
+              <li>No proxy servers intercepting or processing your queries or widgets.</li>
+            </ul>
+          </section>
+
+          <section id="en-storage" class="policy-section">
+            <h2>2. Local Storage on User Device</h2>
+            <p>
+              All user preferences (active widgets, notes from the quick notepad, user-defined quick access shortcuts, selected currency, and weather location) are saved exclusively using the browser's standard <code>localStorage</code> API directly on your local device.
+            </p>
+            <p>
+              This data never leaves your browser and is never uploaded to Attlon servers or third parties. Uninstalling the extension or clearing browser site data clears all preferences immediately and permanently.
+            </p>
+          </section>
+
+          <section id="en-permissions" class="policy-section">
+            <h2>3. Manifest V3 Permissions Justification</h2>
+            <p>
+              The extension requests only the minimum required permissions necessary to provide its interactive New Tab dashboard:
+            </p>
+            <ul>
+              <li>
+                <strong><code>chrome_url_overrides.newtab</code></strong>: Replaces the blank new tab page with Attlon's dynamic industrial safety dashboard and productivity workspace.
+              </li>
+              <li>
+                <strong><code>bookmarks</code></strong>: Required exclusively to read your existing bookmarks and display them inside the dashboard's quick navigation widget. <em>(See Section 5 for details)</em>.
+              </li>
+            </ul>
+          </section>
+
+          <section id="en-hosts" class="policy-section">
+            <h2>4. Host Permissions Justification</h2>
+            <p>
+              In compliance with <strong>Chrome Web Store</strong> and <strong>Microsoft Edge Add-ons</strong> Least-Privilege policies, no wildcard permissions (such as <code>&lt;all_urls&gt;</code>) are used. All remote origins are strictly scoped and justified below:
+            </p>
+
+            <div class="policy-table-wrapper">
+              <table class="policy-table">
+                <thead>
+                  <tr>
+                    <th>Authorized Origin</th>
+                    <th>Exact Purpose</th>
+                    <th>Data Transmitted</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>api.open-meteo.com</code></td>
+                    <td>Fetches live public weather telemetry (temperature, wind speed, humidity, UV index) for the weather widget.</td>
+                    <td>Geographical latitude and longitude coordinates of the selected city. No personal identifiers.</td>
+                  </tr>
+                  <tr>
+                    <td><code>geocoding-api.open-meteo.com</code></td>
+                    <td>Autocompletes city names when the user types in the weather search box.</td>
+                    <td>City query string entered by the user.</td>
+                  </tr>
+                  <tr>
+                    <td><code>air-quality-api.open-meteo.com</code></td>
+                    <td>Retrieves public Air Quality Index (AQI/ICA), PM2.5, and PM10 metrics for industrial safety situational awareness.</td>
+                    <td>Latitude and longitude coordinates of the selected city.</td>
+                  </tr>
+                  <tr>
+                    <td><code>open.er-api.com</code></td>
+                    <td>Fetches public currency exchange rate benchmarks (EUR, USD, GBP, etc.) for the financial calculator widget.</td>
+                    <td>None (Static public GET request).</td>
+                  </tr>
+                  <tr>
+                    <td><code>ipwho.is</code> / <code>freeipapi.com</code></td>
+                    <td>Optional rough location detection only when the user explicitly clicks the "Detect Location" button.</td>
+                    <td>Connecting client IP address used by the API to resolve region name. Never logged or stored by Attlon.</td>
+                  </tr>
+                  <tr>
+                    <td><code>news.google.com</code></td>
+                    <td>Reads public RSS headlines filtered strictly to Spanish Fire Protection (PCI) and industrial safety topics.</td>
+                    <td>None (Read-only public RSS GET request).</td>
+                  </tr>
+                  <tr>
+                    <td><code>feeds.elpais.com</code></td>
+                    <td>Reads public Spain news and economy RSS headlines for the live headline ticker.</td>
+                    <td>None (Read-only public RSS GET request).</td>
+                  </tr>
+                  <tr>
+                    <td><code>www.20minutos.es</code></td>
+                    <td>Reads public Spain headlines in RSS format for the real-time news ticker.</td>
+                    <td>None (Read-only public RSS GET request).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <strong>Security Architecture:</strong> All outbound requests are executed via standard read-only <code>fetch()</code> GET calls, without sending credentials or cookies, and parsed strictly within client memory.
+            </p>
+          </section>
+
+          <section id="en-bookmarks" class="policy-section">
+            <h2>5. Bookmarks Permission Usage</h2>
+            <p>
+              The <code>bookmarks</code> permission is utilized solely to display, search, and launch your bookmarked URLs within the new tab interface.
+            </p>
+            <ul>
+              <li><strong>Local memory only:</strong> Handled via <code>chrome.bookmarks.getTree()</code> inside the user's browser session.</li>
+              <li><strong>No transmission:</strong> Bookmarks are never uploaded, serialized, or transmitted to any remote server.</li>
+              <li><strong>No unauthorized modifications:</strong> The extension does not alter, delete, or overwrite bookmarks without explicit user action.</li>
+            </ul>
+          </section>
+
+          <section id="en-compliance" class="policy-section">
+            <h2>6. Store Compliance & Developer Policy Statement</h2>
+            <p>
+              In accordance with Google Chrome Web Store Developer Program Policies and Microsoft Edge Add-ons Certification Requirements:
+            </p>
+            <ul>
+              <li><strong>No Data Selling:</strong> We do not sell, rent, or monetize user data with third-party brokers or advertisers.</li>
+              <li><strong>Single Purpose:</strong> All permissions directly support user-facing dashboard widgets, productivity tools, and safety news feeds.</li>
+              <li><strong>No Credit Scoring or Lending:</strong> No data is used to evaluate creditworthiness or eligibility for financial products.</li>
+              <li><strong>No Targeted Ads:</strong> The extension does not serve behavioral ads or monetize through tracking networks.</li>
+            </ul>
+          </section>
+
+          <section id="en-contact" class="policy-section">
+            <h2>7. Contact & Security Inquiries</h2>
+            <p>
+              For any questions regarding this privacy policy or our technical implementation, contact our team:
+            </p>
+            <p>
+              <strong>Attlon Industrial Safety</strong><br>
+              Website: <a href="https://attlon.com/" target="_blank" rel="noopener">https://attlon.com/</a><br>
+              Email: <a href="mailto:privacy@attlon.com">privacy@attlon.com</a>
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/logo/attlon-logo-light.svg" alt="Attlon" style="height: 32px;" onerror="this.src='assets/icons/icon48.png'">
+          <p>
+            Espacio de trabajo digital y panel dinámico para profesionales de la seguridad industrial y protección contra incendios.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="index.html#features">Características</a></li>
+            <li><a href="index.html#install">Instalación</a></li>
+            <li><a href="privacy.html">Privacidad</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Plataformas Aprobadas</h4>
+          <ul class="footer-links">
+            <li><a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener">Chrome Web Store Oficial</a></li>
+            <li><a href="https://microsoftedge.microsoft.com/addons/detail/attlon-workspace-dynami/foahdihogkphdjphnjpbibajjohmleac" target="_blank" rel="noopener">Microsoft Edge Add-ons Oficial</a></li>
+            <li><a href="https://attlon.com/" target="_blank" rel="noopener">Sitio Oficial Attlon</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Seguridad</h4>
+          <ul class="footer-links">
+            <li><a href="privacy.html#es-resumen">Zero Tracking</a></li>
+            <li><a href="privacy.html#es-red">Permisos de Red</a></li>
+            <li><a href="privacy.html#es-marcadores">Marcadores Locales</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Attlon Industrial Safety. Todos los derechos reservados.</div>
+        <div>Cumple con la Directiva de Privacidad de Google Chrome Web Store y Microsoft Edge.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function switchLang(lang) {
+      const btnEs = document.getElementById('btnEs');
+      const btnEn = document.getElementById('btnEn');
+      if (lang === 'en') {
+        document.body.classList.add('show-en');
+        btnEn.classList.add('active');
+        btnEs.classList.remove('active');
+        localStorage.setItem('attlon_privacy_lang', 'en');
+      } else {
+        document.body.classList.remove('show-en');
+        btnEs.classList.add('active');
+        btnEn.classList.remove('active');
+        localStorage.setItem('attlon_privacy_lang', 'es');
+      }
+    }
+
+    // Auto-detect browser language or read stored preference
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('attlon_privacy_lang');
+      if (saved === 'en' || (!saved && navigator.language && navigator.language.startsWith('en'))) {
+        switchLang('en');
+      }
+    });
+  </script>
+</body>
+</html>

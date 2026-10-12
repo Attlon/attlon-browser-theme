@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attlon Workspace & Dynamic Dashboard | Extensión Oficial para Chrome y Edge</title>
+  <meta name="description" content="Transforma tu nueva pestaña en un panel de productividad y seguridad industrial con noticias PCI en vivo, integración con Copilot, widgets inteligentes y 100% de privacidad local.">
+  <link rel="icon" type="image/png" href="assets/icons/icon32.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header / Navigation -->
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="brand">
+        <img src="assets/logo/attlon-logo-light.svg" alt="Attlon" class="brand-logo" onerror="this.src='assets/icons/icon48.png'">
+        <div class="brand-text">
+          <span class="brand-name">Attlon Workspace <span class="brand-badge">v1.5.0</span></span>
+        </div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#hero" class="nav-link active">Inicio</a></li>
+        <li><a href="#features" class="nav-link">Características</a></li>
+        <li><a href="#widgets" class="nav-link">Widgets</a></li>
+        <li><a href="#install" class="nav-link">Instalación</a></li>
+        <li><a href="privacy.html" class="nav-link">Privacidad</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Instalar en Chrome
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="container">
+      <div class="hero-pill">
+        <span class="dot"></span>
+        Nueva Versión 1.5.0 · Certificada Manifest V3 para Chrome y Edge
+      </div>
+      <h1 class="hero-title">
+        Tu espacio de trabajo inteligente en cada <span class="gradient-text">Nueva Pestaña</span>
+      </h1>
+      <p class="hero-desc">
+        Diseñado para profesionales de la seguridad industrial y la ingeniería. Integra búsqueda rápida con Copilot, noticias de Protección Contra Incendios (PCI) en tiempo real, telemetría ambiental y accesos directos personalizables con <strong>privacidad total</strong>.
+      </p>
+
+      <div class="hero-cta">
+        <a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+          Instalar en Google Chrome
+        </a>
+        <a href="https://microsoftedge.microsoft.com/addons/detail/attlon-workspace-dynami/foahdihogkphdjphnjpbibajjohmleac" target="_blank" rel="noopener" class="btn btn-outline btn-lg" style="border-color: var(--color-blue); color: #fff;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#00A4EF" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#00A4EF"/></svg>
+          Instalar en Microsoft Edge
+        </a>
+        <a href="privacy.html" class="btn btn-outline btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Garantía de Privacidad
+        </a>
+      </div>
+
+      <div class="hero-meta">
+        <span>✓ 100% Almacenamiento Local</span>
+        <span>✓ Cero Rastreo de Datos</span>
+        <span>✓ Sin Publicidad</span>
+        <span>✓ Código Limpio y Ligero</span>
+      </div>
+
+      <!-- Preview Window -->
+      <div class="hero-preview">
+        <div class="window-bar">
+          <div class="window-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="window-title">attlon://workspace — Nueva Pestaña Dinámica</div>
+          <div class="window-badges">
+            <span class="brand-badge">PCI ACTIVO</span>
+          </div>
+        </div>
+        <img src="assets/preview.jpg" alt="Vista previa de la extensión Attlon Workspace" class="hero-img" onerror="this.src='assets/backgrounds/theme_ntp_background.jpg'">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Capacidades</span>
+        <h2 class="section-title">Potencia y control en tu flujo de trabajo diario</h2>
+        <p class="section-desc">
+          Todo lo que necesitas para tu jornada técnica organizado en un diseño moderno con la identidad visual corporativa de Attlon.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3 class="card-title">Buscador Multi-Motor con Copilot</h3>
+          <p class="card-desc">
+            Alterna al instante entre el asistente de IA Microsoft Copilot, Google, Bing y DuckDuckGo con atajos rápidos de teclado para acelerar tus investigaciones técnicas.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Microsoft Copilot</span>
+            <span class="tag">Google Search</span>
+            <span class="tag">Atajos de Teclado</span>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card">
+          <div class="card-icon blue">🔥</div>
+          <h3 class="card-title">Noticias PCI y España en Vivo</h3>
+          <p class="card-desc">
+            Cintillo informativo en directo con feeds RSS auténticos y actualizados de Protección Contra Incendios, seguridad técnica, El País y 20 Minutos con enlaces directos a las fuentes originales.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Google News PCI</span>
+            <span class="tag">El País</span>
+            <span class="tag">20 Minutos</span>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card">
+          <div class="card-icon">🌦️</div>
+          <h3 class="card-title">Meteo & Calidad del Aire (ICA)</h3>
+          <p class="card-desc">
+            Predicción meteorológica por horas y métricas de seguridad ambiental (calidad del aire, partículas PM2.5/PM10 e índice UV) mediante Open-Meteo sin rastreo GPS forzado.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Open-Meteo</span>
+            <span class="tag">Índice ICA</span>
+            <span class="tag">Sin Rastreo</span>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="card">
+          <div class="card-icon blue">🧮</div>
+          <h3 class="card-title">Widgets & Calculadora Financiera</h3>
+          <p class="card-desc">
+            Conversor de divisas en tiempo real con cotizaciones de mercado (EUR, USD, GBP, etc.), bloc de notas rápido persistente y calculadora para operaciones de ingeniería.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Conversor Divisas</span>
+            <span class="tag">Bloc de Notas</span>
+            <span class="tag">Calculadora</span>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="card">
+          <div class="card-icon">⭐</div>
+          <h3 class="card-title">Organizador de Marcadores</h3>
+          <p class="card-desc">
+            Acceso directo y organizado a tus marcadores favoritos y páginas corporativas directamente en el panel con búsqueda instantánea y procesamiento puramente en tu equipo.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Lectura Local</span>
+            <span class="tag">Búsqueda Rápida</span>
+            <span class="tag">1-Click</span>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="card">
+          <div class="card-icon blue">🛡️</div>
+          <h3 class="card-title">100% Privado y Seguro</h3>
+          <p class="card-desc">
+            Cumplimiento riguroso de las políticas de privacidad de Google Chrome y Microsoft Edge. Ni vendemos datos ni almacenamos perfiles de usuario.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Manifest V3</span>
+            <span class="tag">Zero Analytics</span>
+            <span class="tag">localStorage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Widgets Showcase Section -->
+  <section id="widgets" class="section" style="background: rgba(0, 19, 43, 0.4);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Modularidad</span>
+        <h2 class="section-title">Personalizable según tus necesidades</h2>
+        <p class="section-desc">
+          Mueve, minimiza o despliega los módulos de trabajo con controles intuitivos de arrastrar y soltar (Drag & Drop).
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3 class="step-title">Reorganización Inteligente</h3>
+          <p class="step-desc">
+            Arrastra los iconos y módulos a la posición que prefieras. Si mueves el panel de noticias o los widgets, los marcadores y accesos se reajustan automáticamente sin solaparse.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3 class="step-title">Modo Zen & Concentración</h3>
+          <p class="step-desc">
+            Oculta los widgets secundarios con un solo clic para tener una vista minimalista centrada en el buscador y el fondo corporativo dinámico de Attlon.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3 class="step-title">Persistencia Instantánea</h3>
+          <p class="step-desc">
+            Tus notas, atajos creados y ajustes de widgets se guardan de forma inmediata en el almacenamiento local de tu navegador para que estén siempre listos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy Callout Banner -->
+  <section class="container">
+    <div class="privacy-banner">
+      <div class="privacy-shield">🛡️</div>
+      <div class="privacy-banner-content">
+        <h3>Compromiso Total con tu Privacidad</h3>
+        <p>
+          Nuestra política de privacidad está redactada con total transparencia técnica. Conoce con exactitud por qué la extensión utiliza cada permiso de red y cómo garantiza que tu navegación permanezca estrictamente confidencial.
+        </p>
+      </div>
+      <div>
+        <a href="privacy.html" class="btn btn-outline" style="border-color: var(--color-green); color: #fff;">
+          Leer Política de Privacidad →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section id="install" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Despliegue</span>
+        <h2 class="section-title">Instalación en tu Navegador</h2>
+        <p class="section-desc">
+          Compatible de forma nativa con Google Chrome, Microsoft Edge y navegadores basados en Chromium.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Chrome Option -->
+        <div class="card" style="border-top: 3px solid #09E36F;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#09E36F" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#09E36F"/></svg>
+              Google Chrome
+            </h3>
+            <span class="brand-badge" style="background: rgba(9, 227, 111, 0.2); color: #09E36F; border-color: rgba(9, 227, 111, 0.4);">APROBADA EN CHROME STORE</span>
+          </div>
+          <p class="card-desc">
+            Extensión verificada y publicada oficialmente en la tienda de Google Chrome. Instalación directa y segura con un solo clic.
+          </p>
+          <div style="margin-top: 24px;">
+            <a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%;">
+              Añadir a Google Chrome →
+            </a>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 12px; text-align: center;">
+            ID Oficial: nfpgbkhomcijkflodpkbehgpghppenfi
+          </p>
+        </div>
+
+        <!-- Edge Option -->
+        <div class="card" style="border-top: 3px solid #00A4EF;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 class="card-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#00A4EF" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#00A4EF"/></svg>
+              Microsoft Edge
+            </h3>
+            <span class="brand-badge" style="background: rgba(0, 164, 239, 0.2); color: #00A4EF; border-color: rgba(0, 164, 239, 0.4);">APROBADA EN EDGE ADDONS</span>
+          </div>
+          <p class="card-desc">
+            Complemento verificado y publicado oficialmente en Microsoft Edge Add-ons. Optimizado para entornos Windows y Microsoft 365.
+          </p>
+          <div style="margin-top: 24px;">
+            <a href="https://microsoftedge.microsoft.com/addons/detail/attlon-workspace-dynami/foahdihogkphdjphnjpbibajjohmleac" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%; border-color: var(--color-blue); color: #fff;">
+              Añadir a Microsoft Edge →
+            </a>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 12px; text-align: center;">
+            ID Oficial: foahdihogkphdjphnjpbibajjohmleac
+          </p>
+        </div>
+
+        <!-- Corporate / Offline Option -->
+        <div class="card" style="border-top: 3px solid #8FA4BC;">
+          <h3 class="card-title" style="display: flex; align-items: center; gap: 10px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Despliegue Empresarial
+          </h3>
+          <p class="card-desc">
+            Para administradores de sistemas que distribuyen la extensión vía Directivas de Grupo (GPO / InTune) o instalador offline.
+          </p>
+          <div style="margin-top: 24px;">
+            <a href="https://github.com/Attlon/attlon-browser-theme" target="_blank" rel="noopener" class="btn btn-outline" style="width: 100%;">
+              Ver Repositorio y GPO en GitHub →
+            </a>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 12px; text-align: center;">
+            Instalador silencioso y políticas ADMX disponibles
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/logo/attlon-logo-light.svg" alt="Attlon" style="height: 32px;" onerror="this.src='assets/icons/icon48.png'">
+          <p>
+            Soluciones de ingeniería y seguridad digital para el sector de Protección Contra Incendios y seguridad técnica industrial.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Inicio</a></li>
+            <li><a href="#features">Características</a></li>
+            <li><a href="#widgets">Widgets</a></li>
+            <li><a href="#install">Instalación</a></li>
+            <li><a href="privacy.html">Política de Privacidad</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal y Cumplimiento</h4>
+          <ul class="footer-links">
+            <li><a href="privacy.html#es-resumen">Prácticas de Privacidad</a></li>
+            <li><a href="privacy.html#es-red">Justificación de Permisos</a></li>
+            <li><a href="privacy.html#es-google-compliance">Directrices Chrome & Edge</a></li>
+            <li><a href="mailto:privacy@attlon.com">Contacto DPO</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Plataformas Aprobadas</h4>
+          <ul class="footer-links">
+            <li><a href="https://chromewebstore.google.com/detail/nfpgbkhomcijkflodpkbehgpghppenfi?utm_source=item-share-cb" target="_blank" rel="noopener">Chrome Web Store Oficial</a></li>
+            <li><a href="https://microsoftedge.microsoft.com/addons/detail/attlon-workspace-dynami/foahdihogkphdjphnjpbibajjohmleac" target="_blank" rel="noopener">Microsoft Edge Add-ons Oficial</a></li>
+            <li><a href="https://attlon.com/" target="_blank" rel="noopener">Sitio Oficial Attlon</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Attlon Industrial Safety. Todos los derechos reservados.</div>
+        <div>
+          <a href="privacy.html" style="color: inherit; text-decoration: underline;">Política de Privacidad</a> &bull;
+          <a href="privacy.html" style="color: inherit; text-decoration: underline; margin-left: 8px;">Términos de Uso</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

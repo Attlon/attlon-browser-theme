@@ -177,6 +177,15 @@ if (fs.existsSync(regSrc)) {
   console.log('  -> Copiada política de registro a la raíz del espacio de trabajo.');
 }
 
+// 7. Sincronización de salida web para Vercel (public)
+const websiteDir = path.join(ROOT_DIR, 'website');
+const publicDir = path.join(ROOT_DIR, 'public');
+if (fs.existsSync(websiteDir)) {
+  cleanDir(publicDir);
+  copyDirSync(websiteDir, publicDir);
+  console.log('  -> Sincronizado directorio website a public para Vercel.');
+}
+
 console.log('\n====================================================');
 console.log('   COMPILACION FINALIZADA CON EXITO!                ');
 console.log('====================================================');
